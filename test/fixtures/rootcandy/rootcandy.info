@@ -1,0 +1,52 @@
+name = RootCandy
+description = Administration theme.
+core = 7.x
+
+; Stylesheets
+stylesheets[all][] = css/reset.css
+stylesheets[all][] = css/typography.css
+stylesheets[all][] = css/global.css
+stylesheets[all][] = css/layout.css
+stylesheets[all][] = css/form.css
+stylesheets[all][] = css/table.css
+stylesheets[all][] = css/navigation.css
+stylesheets[all][] = css/misc.css
+stylesheets[all][] = css/icons.css
+stylesheets[all][] = css/default.css
+stylesheets[all][] = css/dev.css
+
+; Regions
+regions[sidebar_first] = Sidebar first
+regions[sidebar_second] = Sidebar second
+regions[content] = Content
+regions[header] = Header
+regions[footer] = Footer
+regions[slider] = Sliding region
+regions[slider_left] = Sliding region Left
+regions[slider_middle] = Sliding region Middle
+regions[slider_right] = Sliding region Right
+
+; Scripts
+scripts[] = scripts/core.js
+scripts[] = scripts/slide.js
+
+; Settings
+settings[rootcandy_navigation_icons] = 0
+settings[rootcandy_navigation_icons_size] = 24
+settings[rootcandy_header_display] = 0
+settings[rootcandy_navigation_custom_icons] = ''
+settings[rootcandy_help_display] = 0
+settings[rootcandy_hide_author] = 0
+settings[rootcandy_hide_panel] = 0
+settings[rootcandy_hide_panel_overlay] = 1
+settings[rootcandy_header_display_overlay] = 1
+settings[rootcandy_navigation_source_admin] = '_rootcandy_default_navigation'
+
+
+
+; Information added by drupal.org packaging script on 2012-04-28
+version = "7.x-1.0-alpha1"
+core = "7.x"
+project = "rootcandy"
+datestamp = "1335611463"
+

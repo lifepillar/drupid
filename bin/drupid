@@ -1,0 +1,270 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2012 Lifepillar
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+require 'drupid'
+
+module Drupid
+
+  class Fools
+    include Drupid::Utils
+
+    def initialize
+      @options = { # Defaults
+        :command   => :sync,
+        :directory => nil,
+        :dry       => false,
+        :edit      => nil,
+        :force     => false,
+        :nocore    => false,
+        :nodeps    => false,
+        :nolibs    => false,
+        :out       => nil,
+        :site      => nil
+      }
+      @updater = nil  
+    end
+
+    def preflight_dependencies
+      odie 'Drupid requires Ruby 1.8.7 or later' if RUBY_VERSION < '1.8.7'
+      ['diff','curl','git','drush','mktemp','patch','rsync'].each do |cmd|
+        if `which #{cmd} 2>/dev/null`.chomp.empty?
+          odie "Drupid requires '#{cmd}', but '#{cmd}' was not found in your PATH."
+        end
+      end
+    end
+
+    def parse_options
+      require 'optparse'
+
+      begin
+        OptionParser.new do |o|
+          o.banner = "Drupid synchronizes a Drush makefile" +
+            " with a Drupal platform, and more!\n" +
+            "Usage:\n" +
+            "drupid -s <MAKEFILE> -p <DIRECTORY> [-cdDflnSv]\n" +
+            "drupid --clear-cache [-nv]\n" +
+            "drupid --edit [<URL>] [-v] [-o <FILE>]\n" +
+            "drupid --graph -p <DIRECTORY> [-Sv]\n" +
+            "drupid --help\n" +
+            "drupid --version"
+          o.on('-s', '--spec MAKEFILE', 'Path to a drush .make file.') do |p|
+            begin
+              @options[:makefile]  = Pathname.new(p).realpath
+            rescue
+              odie "#{p} does not exist."
+            end
+          end
+          o.on('-c', '--no-core', 'Do not synchronize Drupal core.') { @options[:nocore] = true }
+          o.on('-C', '--clear-cache', 'Clear Drupid\'s cache and exit.') { @options[:command] = :clear }
+          o.on('-d', '--no-deps', 'Do not follow dependencies...',
+            '...and miss one of the coolest features of Drupid :)') { @options[:nodeps] = true }
+          o.on('-D', '--debug', 'Enable debugging.') { $DEBUG = true; $VERBOSE = true }
+          o.on('-e', '--edit [URL]', 'Create patches interactively.',
+            'With no URL, edit the current directory.') { |u| @options[:command] = :edit; @options[:edit] = u }
+          o.on('-f', '--force', 'Force completion, even if there are errors.') { |b| @options[:force] = b }
+          o.on('-g', '--graph', 'Generate a dependency graph and exit.') { @options[:command] = :graph }
+          o.on('-h', '--help', 'Print help and exit.') {
+            puts o
+            puts "\nGleefully brought to you by Lifepillar! http://lifepillar.com"
+            exit 0
+          }
+          o.on('-l', '--no-libs', 'Do not synchronize libraries.') { @options[:nolibs] = true }
+          o.on('-n', '--dry', 'Dry run.') { |b| @options[:dry] = b }
+          o.on('-o', '--out FILE', 'Name of the output patch.') { |o| @options[:out] = o }
+          o.on('-p', '--path DIRECTORY', 'Path to a Drupal platform.') do |p|
+            @options[:directory] = Pathname.new(p).expand_path
+            @options[:directory].mkpath
+          end
+          o.on('-S', '--site NAME', 'Process the given site.',
+          '(For multi-site platforms.)') { |s| @options[:site] = s }
+          o.on('-v', '--verbose', 'Be verbose.') { $VERBOSE = true }
+          o.on('-V', '--version', 'Print version and exit.') { puts DRUPID_USER_AGENT; exit 0 }
+          o.parse!
+        end
+      rescue OptionParser::InvalidOption, OptionParser::AmbiguousOption => ex
+        odie "#{ex}\nTry 'drupid --help' to see the available options."
+      rescue OptionParser::MissingArgument, OptionParser::NeedlessArgument => ex
+        odie "#{ex}\nTry 'drupid --help' for the correct syntax."
+      end
+      case @options[:command]
+      when :graph
+        odie "Please specify the path to a Drupal platform." unless @options[:directory]
+      when :clear
+      when :edit
+      when :sync
+        odie "Please specify a makefile." unless @options[:makefile]
+        odie "Please specify a destination." unless @options[:directory]
+      else
+        odie "Unknown command: #{@options[:command]}"
+      end
+    end
+  
+    def sync!
+      blah "Caching files in #{Drupid.cache_path}"
+      begin
+        mf = Drupid::Makefile.new(@options[:makefile])
+      rescue ParseMakefileError => ex
+        odie "Could not parse makefile: #{ex}"
+      end
+      begin
+        pl = Drupid::Platform.new(@options[:directory])
+        pl.contrib_path = pl.sites_dir + @options[:site] if @options[:site]
+      rescue => ex
+        odie "Could not analyze platform: #{ex}"
+      end
+      @updater = Drupid::Updater.new(mf, pl, @options[:site])
+      blah 'Syncing (this may take a while)...'
+      ohai 'Preflighting changes...'
+      @updater.sync(
+        :nocore => @options[:nocore],
+        :nofollow => @options[:nodeps],
+        :nolibs => @options[:nolibs]
+      )
+
+      # Check outcome and apply changes
+      failed = @updater.log.errors?
+      if failed
+        puts
+        ohai "The following errors should be fixed for a successful update:"
+        @updater.log.errors.each { |e| ofail e }
+      end
+
+      if @updater.pending_actions?
+        if (failed and (not @options[:force])) or @options[:dry]
+          ohai 'No changes applied.'
+        else
+          ohai 'Applying changes' + (failed ? ' despite errors...' : '...')
+          @updater.apply_changes(:force => @options[:force])
+          ohai 'Success!'
+        end
+      else
+        ohai "The platform is in sync with the makefile." unless failed
+      end
+      # Write .lock makefile
+      if !(@options[:no_lockfile] or @options[:dry]) and
+      (!(failed) or @options[:force]) and
+      '.lock' != @updater.makefile.path.extname
+        @updater.makefile.save(@updater.makefile.path.sub_ext('.make.lock'))
+      end
+    end
+
+    def clear_cache
+      FileUtils.rmtree Drupid.cache_path.to_s, :noop => @options[:dry], :verbose => $VERBOSE
+      ohai "Cache cleared."
+    end
+
+    def graph
+      platform = Drupid::Platform.new(@options[:directory])
+      platform.contrib_path = platform.sites_dir + @options[:site] if @options[:site]
+      outfile = platform.dependency_graph
+      ohai "#{outfile} created in the current directory."
+    end
+
+    def patch_interactive
+      patch = ''
+      if @options[:edit]
+        begin
+          tmp = Pathname.new `mktemp -d /tmp/temp_item-XXXXXX`.strip
+          dl = Drupid.makeDownloader @options[:edit], tmp, File.basename(@options[:edit])
+          ohai "Fetching #{@options[:edit]}"
+          dl.fetch
+          dl.stage
+          wd = dl.staged_path
+        rescue => ex
+          odie "Error retrieving #{@options[:edit]}: #{ex}"
+        end
+      else
+        wd = Pathname.pwd
+      end
+      git_repo = (wd + '.git').exist?
+      Dir.chdir wd.to_s do
+        if git_repo
+          blah "This directory appears to be a git repo"
+          unless git('status', '-s').empty?
+            odie "This git repo is not in a clean state"
+          end
+        else
+          begin
+            blah "Initializing temporary git repo inside #{wd}"
+            git 'init'
+            git 'add', '-A'
+            git 'commit', '-m', 'Temporary commit'
+          rescue
+            odie "Unable to create temporary git repo."
+          end
+        end
+        begin
+          ohai 'Make any changes you wish, then exit from the shell.'
+          interactive_shell
+          git 'add', '-A'
+          patch = git 'diff', '--binary', 'HEAD'
+        ensure
+          git 'reset', '--hard'
+          FileUtils.rmtree '.git' unless git_repo
+        end
+      end
+      # Show/write patch
+      if patch.empty?
+        ohai "No changes made"
+      else
+        if @options[:out]
+          writeFile @options[:out], patch
+          ohai "Patch written to #{@options[:out]}"
+        else
+          ohai 'May I interest you in a patch?'
+          puts patch
+        end
+      end
+    end
+
+    def go!
+      preflight_dependencies
+      parse_options
+      ohai "Dry run" if @options[:dry]
+      case @options[:command]
+      when :clear then clear_cache
+      when :graph then graph
+      when :edit then patch_interactive
+      else sync!
+      end
+    end
+
+    def self.rush_in!
+      begin
+        drupid = Fools.new
+        drupid.go!
+      rescue Interrupt
+        puts
+        drupid.ohai "Drupid interrupted"
+      rescue => ex
+        puts
+        drupid.debug 'Backtrace:', ex.backtrace.join("\n")
+        drupid.odie "Unexpected exception raised:\n#{ex}"
+      end
+    end
+
+  end # Fools
+
+  Fools.rush_in!
+
+end # Drupid

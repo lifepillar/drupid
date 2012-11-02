@@ -1,0 +1,8 @@
+.DS_Store
+drupid-*.gem
+/vendor/
+/bin/*
+!/bin/drupid
+/doc/
+/test/makefiles/*
+!/test/makefiles/*.make

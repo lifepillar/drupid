@@ -1,0 +1,25 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    ansi (1.4.3)
+    json (1.7.5)
+    minitest (3.3.0)
+    rack (1.4.1)
+    rack-test (0.6.1)
+      rack (>= 1.0)
+    rake (0.8.7)
+    rdoc (3.12)
+      json (~> 1.4)
+    turn (0.9.6)
+      ansi
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ansi
+  minitest
+  rack-test
+  rake (= 0.8.7)
+  rdoc
+  turn

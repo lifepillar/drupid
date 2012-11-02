@@ -1,0 +1,15 @@
+name = mothershipstark
+description = mothership test on the stark theme
+engine = phptemplate
+core = 7.x
+php = 5.2
+
+stylesheets[all][] = layout.css
+
+base theme = mothership
+; Information added by drupal.org packaging script on 2011-12-26
+version = "7.x-2.2"
+core = "7.x"
+project = "mothership"
+datestamp = "1324859678"
+

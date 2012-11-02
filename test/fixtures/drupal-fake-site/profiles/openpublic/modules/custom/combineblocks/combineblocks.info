@@ -1,0 +1,11 @@
+
+name = "Combine Blocks"
+description = "Use js to combine two blocks in a tab view."
+core = 7.x
+
+; Information added by drupal.org packaging script on 2011-11-17
+version = "7.x-1.0-beta4"
+core = "7.x"
+project = "openpublic"
+datestamp = "1321545044"
+

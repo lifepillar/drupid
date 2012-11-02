@@ -1,0 +1,58 @@
+name = tema
+description = this is the TEMA theme
+screenshot = screenshot.png
+engine = phptemplate
+core = 7.x
+php = 4.2
+base theme = mothership
+
+;-------------- F E A T U R E S -------------
+features[] = logo
+features[] = favicon
+features[] = name
+;features[] = slogan
+features[] = node_user_picture
+features[] = comment_user_picture
+features[] = comment_user_verification
+;features[] = main_menu
+;features[] = secondary_menu
+
+;-------------- R E G I O N S -------------
+regions[header] = Header
+regions[header_second] = Header Second
+regions[sidebar_first]  = Sidebar First
+regions[sidebar_second] = Sidebar Second
+regions[content_pre]  = Content Pre
+regions[content]      = Content
+regions[content_post] = Content Post
+regions[half_first]   = 1. Half column
+regions[half_second]  = 2. Half column
+regions[third_firstcolumn]  = Content 1. column
+regions[third_secondcolum]  = Content 2. column
+regions[third_thirdcolumn]  = Content 3. column
+regions[footer_firstcolumn]   = Footer 1. column
+regions[footer_secondcolumn]  = Footer 2. column
+regions[footer_thirdcolumn]   = Footer 3. column
+regions[footer_fourthcolumn]  = Footer 4. column
+regions[footer] = Footer
+
+;-- Required Regions
+regions[page_top] = Page Top
+regions[page_bottom] = Page Bottom
+regions[highlighted] = Highlighted
+regions[help] = Help
+
+
+;-------------- C S S -------------
+stylesheets[all][] = css/style.css
+
+;-------------- JS -------------
+scripts[] = js/slides.min.jquery.js
+scripts[] = js/tema.js
+
+; Information added by drupal.org packaging script on 2011-12-26
+version = "7.x-2.2"
+core = "7.x"
+project = "mothership"
+datestamp = "1324859678"
+
