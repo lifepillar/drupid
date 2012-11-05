@@ -38,7 +38,7 @@ module Kernel
 end unless Kernel.respond_to? :silence_warnings
 
 module Drupid
-  DRUPID_VERSION = '1.0.0'
+  DRUPID_VERSION = '1.0.1'
   DRUPID_USER_AGENT = "Drupid #{DRUPID_VERSION} (Ruby #{RUBY_VERSION}-#{RUBY_PATCHLEVEL}; #{RUBY_PLATFORM})"
 end
 
