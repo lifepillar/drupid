@@ -280,7 +280,7 @@ module Drupid
       # deleting "spurious" paths inside the 'libraries' folder.
       # Note also that Drupid is not smart enough to find libraries installed
       # inside modules or themes.
-      Pathname.glob(@platform.libraries_path + '**/*').each do |p|
+      Pathname.glob(@platform.libraries_path.to_s + '/**/*').each do |p|
         next unless p.directory?
         q = p.relative_path_from(@platform.local_path + @platform.contrib_path)
         # If q is not a prefix of any processed path, or viceversa, delete it

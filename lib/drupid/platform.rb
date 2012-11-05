@@ -65,7 +65,7 @@ module Drupid
     # Returns the (possibly empty) list of sites in this platform.
     def site_names
       return [] unless sites_path.exist?
-      Pathname.glob(sites_path + '*/').map { |s| s.basename.to_s }.reject { |s| s =~ /^all$/ }
+      Pathname.glob(sites_path.to_s + '/*/').map { |s| s.basename.to_s }.reject { |s| s =~ /^all$/ }
     end
 
     # Returns the full path to the libraries folder.
@@ -94,7 +94,7 @@ module Drupid
     # For profiles to be found, they must be located inside
     # the subdirectory of #local_path named 'profiles'.
     def profiles
-      Pathname.glob(local_path + 'profiles/*/*.profile').map { |p| p.basename('.profile').to_s }
+      Pathname.glob(local_path.to_s + '/profiles/*/*.profile').map { |p| p.basename('.profile').to_s }
     end
 
     # Returns the Drupid::PlatformProject object with the specified name,
@@ -157,7 +157,7 @@ module Drupid
       search_paths << local_path+contrib_path+'themes/**/*.info'
       search_paths.uniq! # contrib_path may be ''
       search_paths.each do |sp|
-        Dir[sp].each do |p|
+        Dir[sp.to_s].each do |p|
           pp = Drupid::PlatformProject.new(self, p)
           @projects[pp.name] = pp
           count += 1

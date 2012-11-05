@@ -107,7 +107,7 @@ module Drupid
         @project_dir+'**/*.info'
       ]
       attempts.each do |p|
-        list = Pathname.glob(p)
+        list = Pathname.glob(p.to_s)
         if 1 == list.size and list.first.exist?
           # Set the project's name after the .info file name
           @project_name = list.first.basename('.info').to_s
@@ -115,7 +115,7 @@ module Drupid
         end
       end
       # We get here if all the above has failed.
-      Pathname.glob(@project_dir+'**/*.info').each do |p|
+      Pathname.glob(@project_dir.to_s+'/**/*.info').each do |p|
         data = p.open("r").read
         match = data.match(/project\s*=\s*["']?(.+)["']?/)
         unless match.nil?

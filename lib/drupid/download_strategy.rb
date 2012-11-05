@@ -452,7 +452,7 @@ module Drupid
         debug "Pathname.mkpath may raise harmless exceptions"
         wd.mkpath unless wd.exist?
         target = wd + @co.basename
-        FileUtils.cp_r Dir[@co+"{.}"], target
+        FileUtils.cp_r Dir[(@co+"{.}").to_s], target
 
         require 'find'
         Find.find(Dir.pwd) do |path|
@@ -534,7 +534,7 @@ module Drupid
       def stage
         # FIXME: The export command doesn't work on checkouts
         # See https://bugs.launchpad.net/bzr/+bug/897511
-        FileUtils.cp_r Dir[@clone+"{.}"], Dir.pwd
+        FileUtils.cp_r Dir[(@clone+"{.}").to_s], Dir.pwd
         FileUtils.rm_r Dir[Dir.pwd+"/.bzr"]
     
         #dst=Dir.getwd
