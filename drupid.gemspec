@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
   s.executables << 'drupid'
   s.add_runtime_dependency "rgl", [">= 0.4.0"]
   s.homepage    = 'http://lifepillar.com'
+  s.license     = 'MIT'
 end
