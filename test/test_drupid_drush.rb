@@ -25,52 +25,57 @@ require 'helper'
 class TestDrupidDrush < MiniTest::Unit::TestCase
   def test_recommended_release_views
     test_output = <<EOS
-------- RELEASES FOR 'VIEWS' PROJECT -------
- Release         Date         Status                 
- 7.x-3.x-dev     2012-Jan-30  Development            
- 7.x-3.1         2012-Jan-16  Supported, Recommended 
- 7.x-3.0         2011-Dec-18                         
- 7.x-3.0-rc3     2011-Nov-16  Security               
- 7.x-3.0-rc1     2011-Jun-17                         
- 7.x-3.0-beta3   2011-Mar-28                         
- 7.x-3.0-beta2   2011-Mar-26                         
- 7.x-3.0-beta1   2011-Mar-26                         
- 7.x-3.0-alpha1  2011-Jan-06                  
+views,7.x-3.x-dev,2013-Jul-10,Development
+views,7.x-3.7,2013-Apr-09,"Supported, Recommended"
+views,7.x-3.6,2013-Mar-20,Security
+views,7.x-3.5,2012-Aug-24,
+views,7.x-3.4,2012-Aug-21,
+views,7.x-3.3,2012-Feb-22,
+views,7.x-3.2,2012-Feb-20,
+views,7.x-3.1,2012-Jan-16,
+views,7.x-3.0,2011-Dec-18,
+views,7.x-3.0-rc3,2011-Nov-16,Security
+views,7.x-3.0-rc1,2011-Jun-17,
+views,7.x-3.0-beta3,2011-Mar-28,
+views,7.x-3.0-beta2,2011-Mar-26,
+views,7.x-3.0-beta1,2011-Mar-26,
+views,7.x-3.0-alpha1,2011-Jan-06,
 EOS
-    assert_equal '7.x-3.1', Drupid::Drush.recommended_release(test_output)
+    assert_equal '7.x-3.7', Drupid::Drush.recommended_release(test_output)
   end
 
   def test_recommended_release_media
     test_output = <<EOS
-------- RELEASES FOR 'MEDIA' PROJECT -------
- Release         Date         Status                           
- 7.x-2.x-dev     2012-Jan-27  Development                      
- 7.x-2.0-unstab  2012-Jan-12  Supported, Security              
- le3                                                           
- 7.x-2.0-unstab  2011-Oct-12                                   
- le2                                                           
- 7.x-2.0-unstab  2011-Aug-10                                   
- le1                                                           
- 7.x-1.x-dev     2012-Jan-27  Development                      
- 7.x-1.0-rc3     2012-Jan-12  Supported, Security, Recommended 
- 7.x-1.0-rc2     2011-Oct-12  Security                         
- 7.x-1.0-rc1     2011-Sep-26                                   
- 7.x-1.0-beta5   2011-Jul-04                                   
- 7.x-1.0-beta4   2011-Apr-27  Security                         
- 7.x-1.0-beta3   2011-Jan-15                                   
- 7.x-1.0-beta2   2010-Nov-15                                   
- 7.x-1.0-beta1   2010-Oct-27                                   
-
+media,7.x-2.x-dev,2013-Aug-23,Development
+media,7.x-2.0-alpha2,2013-Aug-20,Supported
+media,7.x-2.0-alpha1,2013-Aug-11,
+media,7.x-2.0-unstable7,2012-Nov-18,
+media,7.x-2.0-unstable6,2012-Jun-30,
+media,7.x-2.0-unstable5,2012-May-20,
+media,7.x-2.0-unstable4,2012-May-07,
+media,7.x-2.0-unstable3,2012-Jan-12,Security
+media,7.x-2.0-unstable2,2011-Oct-12,
+media,7.x-2.0-unstable1,2011-Aug-10,
+media,7.x-1.x-dev,2013-Aug-16,Development
+media,7.x-1.3,2013-Mar-02,"Supported, Recommended"
+media,7.x-1.2,2012-Jun-30,
+media,7.x-1.1,2012-May-07,
+media,7.x-1.0,2012-Mar-23,
+media,7.x-1.0-rc3,2012-Jan-12,Security
+media,7.x-1.0-rc2,2011-Oct-12,Security
+media,7.x-1.0-rc1,2011-Sep-26,
+media,7.x-1.0-beta5,2011-Jul-04,
+media,7.x-1.0-beta4,2011-Apr-27,Security
+media,7.x-1.0-beta3,2011-Jan-15,
+media,7.x-1.0-beta2,2010-Nov-15,
+media,7.x-1.0-beta1,2010-Oct-27,
 EOS
-  assert_equal '7.x-1.0-rc3', Drupid::Drush.recommended_release(test_output)
+  assert_equal '7.x-1.3', Drupid::Drush.recommended_release(test_output)
   end
 
   def test_supported_release_cck
     test_output = <<EOS
-------- RELEASES FOR 'CCK' PROJECT -------
- Release         Date         Status                 
- 7.x-2.x-dev     2011-Aug-23  Supported, Development 
-
+cck,7.x-2.x-dev,2012-Nov-20,"Supported, Development"
 EOS
   assert_equal '7.x-2.x-dev', Drupid::Drush.supported_release(test_output)
   end

@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+require 'csv'
 
 module Drupid
 
@@ -44,15 +45,15 @@ module Drupid
     # Executes 'drush pm-releases --all' for the given project and
     # returns the output of the command.
     def self.pm_releases project_name, options = {}
-      drush 'pm-releases', '--all', project_name
+      drush 'pm-releases', '--all', '--format=csv', project_name
     end
 
     # Parses the output of 'drush pm-releases' and returns
     # the version of the latest recommended release, or nil
     # if no such release exists.
     def self.recommended_release pm_releases_output
-      pm_releases_output.each_line do |l|
-        return $~[1] if (l.match(/^\s*([^\s]+).*Recommended/))
+      CSV.parse(pm_releases_output).each do |l|
+        return l[1] if ((not l[3].nil?) and l[3].match(/Recommended/))
       end
       nil
     end
@@ -61,8 +62,8 @@ module Drupid
     # the version of the latest supported release, or nil
     # if no such release exists.
     def self.supported_release pm_releases_output
-      pm_releases_output.each_line do |l|
-        return $~[1] if (l.match(/^\s*([^\s]+).*Supported/))
+      CSV.parse(pm_releases_output).each do |l|
+        return l[1] if ((not l[3].nil?) and l[3].match(/Supported/))
       end
       nil
     end
