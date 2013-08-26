@@ -1,7 +1,7 @@
 source "http://rubygems.org/"
 
 gem "ansi"
-gem "rake", '0.8.7'
+gem "rake"
 gem "rdoc"
 
 group :test do
