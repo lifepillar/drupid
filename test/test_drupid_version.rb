@@ -204,4 +204,49 @@ class TestDrupidVersion < MiniTest::Unit::TestCase
     end
   end
 
+  def test_version_extra
+    v1  = Drupid::Version.new(8, '1.0-unstable1')
+    v2  = Drupid::Version.new(8, '1.0-alpha4')
+    v3  = Drupid::Version.new(8, '1.0-beta12')
+    v4  = Drupid::Version.new(8, '1.0-rc2')
+    v5  = Drupid::Version.new(8, '1.0')
+    v6  = Drupid::Version.new(8, '1.x-dev')
+    v7  = Drupid::Version.new(8, '8.x')
+    refute v1.stable?, 'v1 is not stable'
+    refute v2.stable?, 'v2 is not stable'
+    refute v3.stable?, 'v3 is not stable'
+    refute v4.stable?, 'v4 is not stable'
+    assert v5.stable?, 'v5 is stable'
+    refute v6.stable?, 'v6 is not stable'
+    refute v7.stable?, 'v7 is not stable'
+    refute v1.release_candidate?, 'v1 is not rc'
+    refute v2.release_candidate?, 'v2 is not rc'
+    refute v3.release_candidate?, 'v3 is not rc'
+    assert v4.release_candidate?, 'v4 is rc'
+    refute v5.release_candidate?, 'v5 is not rc'
+    refute v6.release_candidate?, 'v6 is not rc'
+    refute v7.release_candidate?, 'v7 is not rc'
+    refute v1.alpha?, 'v1 is not alpha'
+    assert v2.alpha?, 'v2 is alpha'
+    refute v3.alpha?, 'v3 is not alpha'
+    refute v4.alpha?, 'v4 is not alpha'
+    refute v5.alpha?, 'v5 is not alpha'
+    refute v6.alpha?, 'v6 is not alpha'
+    refute v7.alpha?, 'v7 is not alpha'
+    refute v1.beta?, 'v1 is not beta'
+    refute v2.beta?, 'v2 is not beta'
+    assert v3.beta?, 'v3 is beta'
+    refute v4.beta?, 'v4 is not beta'
+    refute v5.beta?, 'v5 is not beta'
+    refute v6.beta?, 'v6 is not beta'
+    refute v7.beta?, 'v7 is not beta'
+    refute v1.development_snapshot?, 'v1 is not development snapshot'
+    refute v2.development_snapshot?, 'v2 is not development snapshot'
+    refute v3.development_snapshot?, 'v3 is not development snapshot'
+    refute v4.development_snapshot?, 'v4 is not development snapshot'
+    refute v5.development_snapshot?, 'v5 is not development snapshot'
+    assert v6.development_snapshot?, 'v6 is not development snapshot'
+    assert v7.development_snapshot?, 'v7 is not development snapshot'
+  end
+
 end # TestDrupidVersion

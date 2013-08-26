@@ -121,7 +121,27 @@ module Drupid
     # Returns true if this version represents a development snapshot;
     # returns false otherwise.
     def development_snapshot?
-      'x' == @patchlevel
+      'x' == @patchlevel or DEVELOPMENT == @extra_type
+    end
+
+    # Returns true if this a stable version (e.g., '8.x-1.0').
+    def stable?
+      EMPTY == @extra_type and 'x' != @patchlevel
+    end
+
+    # Returns true if this is a release candidate (e.g., '8.x-1.0-rc1').
+    def release_candidate?
+      RC == @extra_type
+    end
+
+    # Returns true if this is an alpha release (e.g., '8.x-1.0-alpha1').
+    def alpha?
+      ALPHA == @extra_type
+    end
+
+    # Returns true if this is a beta release (e.g., '8.x-1.0-beta1').
+    def beta?
+      BETA == @extra_type
     end
 
     # A synonym for self.short.
