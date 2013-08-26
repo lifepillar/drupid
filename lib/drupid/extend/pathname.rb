@@ -1,3 +1,5 @@
+# -*- coding: ascii -*-
+
 # Copyright (c) 2012 Lifepillar
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
