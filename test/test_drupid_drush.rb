@@ -44,6 +44,15 @@ EOS
     assert_equal '7.x-3.7', Drupid::Drush.recommended_release(test_output)
   end
 
+  def test_recommended_release_drupal
+    test_output = <<EOS
+drupal,7.x-dev,2013-Aug-17,Development
+drupal,7.23,2013-Aug-08,"Supported, Recommended"
+drupal,7.22,2013-Apr-03,
+EOS
+    assert_equal '7.23', Drupid::Drush.recommended_release(test_output)
+  end
+
   def test_recommended_release_media
     test_output = <<EOS
 media,7.x-2.x-dev,2013-Aug-23,Development
