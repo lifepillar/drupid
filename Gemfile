@@ -5,7 +5,7 @@ gem "rake", '0.8.7'
 gem "rdoc"
 
 group :test do
-  gem "minitest"
+  gem "minitest", "~>4.7"
   gem "rack-test"
   gem "turn"
 end
