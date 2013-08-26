@@ -1,6 +1,7 @@
 .DS_Store
 drupid-*.gem
-/vendor/
+/.bundle/*
+!/.bundle/config
 /bin/*
 !/bin/drupid
 /doc/
