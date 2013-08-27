@@ -249,4 +249,36 @@ class TestDrupidVersion < MiniTest::Unit::TestCase
     assert v7.development_snapshot?, 'v7 is not development snapshot'
   end
 
+  def test_natural_ordering
+    vv = ['0.x', '0.9-alpha4', '0.9-beta0', '0.9', '1.x-dev',
+          '1.x-dev2', '1.0-unstable1', '1.0-alpha4', '1.0-alpha40',
+          '1.0-beta1', '1.0-beta12', '1.0-rc1', '1.0-rc2', '1.0-rc21',
+          '1.0', '1.1-beta1', '1.1', '2.x-dev']
+    vv2 = vv.shuffle
+    vv2.map! { |v| Drupid::Version.new(8, v) }
+    vv2.sort!
+    vv2.map! { |v| v.short }
+    assert_equal vv, vv2, 'not sorted correctly'
+
+    vv = ['1.x-dev', '1.x', '1.0-unstable6', '1.0-alpha4', '1.0-beta0',
+          '1.0-rc1', '1.0', '2.x-dev']
+    vv2 = vv.shuffle
+    vv2.map! { |v| Drupid::Version.new(8, v) }
+    vv2.sort!
+    vv2.map! { |v| v.short }
+    assert_equal vv, vv2, 'not sorted correctly'
+  end
+
+  def test_best_version
+    vv = ['0.x', '1.x-dev', '1.x-dev2', '2.x-dev', '1.0-unstable1',
+          '0.9-alpha4', '1.0-alpha4', '1.0-alpha40',
+          '0.9-beta0', '1.0-beta1', '1.0-beta12', '1.1-beta1',
+          '1.0-rc1', '1.0-rc2', '1.0-rc21', '0.9', '1.0', '1.1']
+    vv2 = vv.shuffle
+    vv2.map! { |v| Drupid::Version.new(7, v) }
+    vv2.sort! { |a,b| a.better(b) }
+    vv2.map! { |v| v.short }
+    assert_equal vv, vv2, 'not sorted correctly'
+  end
+
 end # TestDrupidVersion
