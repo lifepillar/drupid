@@ -175,6 +175,10 @@ module Drupid
       @extra_num == other.extra_num
     end
 
+    # Compares two versions according the their "natural" ordering.
+    #
+    # According to this ordering, '1.x-dev' < '1.0-unstable6' <
+    # '1.0-alpha4' < '1.0-beta0' < '1.0-rc1' < '1.0' <'2.x-dev'.
     def <=>(w)
       c = @core <=> w.core
       if 0 == c
