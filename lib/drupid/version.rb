@@ -199,6 +199,29 @@ module Drupid
       c
     end
 
+    # Compares two versions to determine which is "better".
+    # Returns -1 if self is better than w, 0 when they are
+    # the same equivalent, 1 when w is better than w.
+    #
+    # By our own definitions, stable versions (e.g., '1.0') are
+    # better than release candidates (e.g., ('1.1-rc1'), which are
+    # better than beta releases (e.g., '1.2-beta2'), which are better than
+    # alpha releases (e.g., '1.3-alpha1'), which are better than
+    # unstable releases (e.g., '1.4-unstable10'), which are better
+    # than development snapshots (e.g., '2.x-dev'), which are better
+    # than anything else (e.g., '3.x').
+    def better(w)
+      if ('x' == @patchlevel and EMPTY == @extra_type) or (EMPTY == w.extra_type and 'x' == w.patchlevel)
+        c = (self <=> w)
+      else
+        c = @extra_type <=> w.extra_type
+        if 0 == c
+          c = (self <=> w)
+        end
+      end
+      c
+    end
+
     def extra
       case @extra_type
         when EMPTY then t = ''
