@@ -13,7 +13,7 @@ Tested compatibility with Ruby 2.0.
 
 #### Version 1.0.1 (2012/11/5)
 
-Fix a bug causing a “Can't convert Pathname to String” error in some Ruby variants (e.g., 1.9.1-p243).
+Fixed a bug causing a “Can't convert Pathname to String” error in some Ruby variants (e.g., 1.9.1-p243).
 
 #### Version 1.0.0
 
@@ -29,6 +29,10 @@ To run the whole test suite:
 To run a single test file:
 
     bundle exec turn -Itest -Ilib test/test_<name>.rb
+
+or
+
+    ruby -Itest -Ilib test/test_<NAME>.rb
 
 To run a single test:
 
