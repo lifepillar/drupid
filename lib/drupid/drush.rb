@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-require 'csv'
+require 'yaml'
 
 module Drupid
 
@@ -32,17 +32,14 @@ module Drupid
       runBabyRun DRUSH, args
     end
 
-    # Executes 'drush core-status' at the given path and
+    # Executes 'drush core-status --format=yaml' at the given path and
     # returns the output of the command.
     def self.status path, options = {}
       output = nil
       FileUtils.cd(path) do
-        output = drush 'core-status', '--pipe'
+        output = drush 'core-status', '--format=yaml'
       end
-      output
-    end
-
-      end
+      YAML.load(output)
     end
 
     # Returns a list of all the existing versions of the specified project.
@@ -94,34 +91,18 @@ module Drupid
       return nil
     end
 
-    # Executes 'drush pm-info' at the given path and with an
-    # optional list of projects.
-    # Returns the output of the command.
-    def self.pm_info path, projects = [], options = {}
-      output = nil
-      args = Array.new
-      args << 'pm-info'
-      args << projects.join(' ') unless nil != projects and projects.empty?
-      FileUtils.cd(path) do
-        output = runBabyRun DRUSH, args, :redirect_stderr_to_stdout => true
-      end
-      output
-    end
-
-    # Returns the version of Drupal (e.g., '7.12')
-    # if the given path contains Drupal;
-    # returns nil otherwise.
+    # Returns the version of Drupal as a String object (e.g., '7.12')
+    # if the specified path points to a Drupal site; returns nil otherwise.
     def self.drupal_version path, options = {}
       st = self.status(path, options)
-      return nil unless st.match(/drupal_version=(\d+\.\d+)/)
-      return $~[1]
+      return st['drupal-version']
     end
 
     # Returns true if a Drupal's site is bootstrapped at the given path;
     # returns false otherwise.
     def self.bootstrapped?(path, options = {})
       st = self.status(path, options)
-      st.match(/drupal_bootstrap=Successful/) ? true : false
+      return (st['bootstrap'] =~ 'Successful') ? true : false
     end
 
     # Returns true if the project at the given path is an enabled theme
@@ -134,34 +115,17 @@ module Drupid
     #
     # Options: verbose
     def self.installed?(site_path, project_name, project_path, options = {})
-      st = ''
       begin
-        st = self.pm_info(site_path, [project_name], options)
+        output = drush 'pm-info', '--format=yaml', projects_name
       rescue # site not fully bootstrapped
         return false
       end
-      return false unless st.match(/Path +: +#{project_path}/)
-      return false unless st.match(/Type +: +([^\s]+)/)
-      type = $~[1]
-      return false unless st.match(/Status +: +(.+)$/)
-      project_status = $~[1]
+      st = YAML.load(output)
+      return false unless st.has_key?(project_name)
+      type = st[project_name]['type']
+      status = st[project_name]['status']
       ('module' == type and project_status !~ /not installed/) or
       ('theme'  == type and project_status =~ /^enabled/)
-    end
-
-    # Executes 'drush make' and returns the output of the command.
-    #
-    # Options: contrib_path, nocore, dry, verbose
-    def self.make(makefile, target, options = {})
-      args = Array.new
-      args << 'make'
-      args << '-y'
-      args << '--no-core' if options[:nocore]
-      args << "--contrib-destination=#{options[:contrib_path]}" if options[:contrib_path]
-      args << "--no-patch-txt"
-      args << makefile
-      args << target
-      drush(*args)
     end
 
   end # module Drush
