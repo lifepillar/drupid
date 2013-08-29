@@ -238,7 +238,7 @@ module Drupid
         if l =~ /define.*'VERSION'.*'(.+)'/
           v = $1
           debug "Drupal version detected: #{v}"
-          core = v.match(/(\d+)\./)[1].to_i
+          core = v.match(/^(\d+)\./)[1].to_i
           @drupal_project = Drupid::Project.new('drupal', core, v)
           @drupal_project.local_path = self.local_path
           debug "Drupal platform has version: #{@drupal_project.version} (core: #{@drupal_project.version.core})"
