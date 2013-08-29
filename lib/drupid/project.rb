@@ -531,6 +531,10 @@ module Drupid
         blah e
         return self.version
       end
+      # Remove version specifications that do not start with self.core.
+      # This seemingly superfluous loop is needed because, for example,
+      # 'drush pm-releases --all imce-7.x' returns 'master' as a version (oh my!).
+      versions.delete_if { |v| v !~ /^#{self.core.to_i}\./ }
       version_list = []
       if self.drupal?
         versions.each { |v| version_list.push(Version.new(self.core, v)) }
