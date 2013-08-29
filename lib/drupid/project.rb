@@ -523,7 +523,7 @@ module Drupid
     def best_release
       begin
         versions = Drush.pm_releases("#{self.name}-#{self.core}")
-      rescue Drupid::ErrorDuringExecution => e
+      rescue ErrorDuringExecution => e
         owarn "Could not get release history for #{self.extended_name}"
         blah e
         return self.version
