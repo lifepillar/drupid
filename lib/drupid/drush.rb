@@ -32,16 +32,6 @@ module Drupid
       runBabyRun DRUSH, args
     end
 
-    # Executes 'drush core-status --format=yaml' at the given path and
-    # returns the output of the command.
-    def self.status path, options = {}
-      output = nil
-      FileUtils.cd(path) do
-        output = drush 'core-status', '--format=yaml'
-      end
-      YAML.load(output)
-    end
-
     # Returns a list of all the existing versions of the specified project.
     def self.pm_releases project_name, options = {}
       output = drush 'pm-releases', '--all', '--format=list', project_name
@@ -94,7 +84,12 @@ module Drupid
     # Returns true if a Drupal's site is bootstrapped at the given path;
     # returns false otherwise.
     def self.bootstrapped?(path, options = {})
-      st = self.status(path, options)
+      output = ''
+      FileUtils.cd(path) do
+        output = drush 'core-status', '--format=yaml'
+      end
+      st = YAML.load(output)
+      return false unless st
       return (st['bootstrap'] =~ 'Successful') ? true : false
     end
 
