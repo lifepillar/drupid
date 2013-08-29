@@ -267,6 +267,12 @@ class TestDrupidProject < MiniTest::Unit::TestCase
     assert_equal '8.x-2.0', p.version.long
   end
 
+  def test_set_project_version_to_nil
+    p = Drupid::Project.new('foo', 8)
+    p.version = nil
+    assert_nil p.version
+  end
+
   def test_project_type_features_news
     p = Drupid::Project.new('featured_news_feature', 7)
     p.local_path = TESTSITE+'sites/all/modules/featured_news_feature'

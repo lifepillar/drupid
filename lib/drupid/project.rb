@@ -289,6 +289,7 @@ module Drupid
     # The argument must be a String object or a Drupid::Version object.
     # For the syntax of the String argument, see Drupid::Version.
     def version=(new_version)
+      return @version = nil if new_version.nil?
       if new_version.is_a?(Version)
         temp_version = new_version
       elsif new_version.is_a?(String)
@@ -297,7 +298,7 @@ module Drupid
       else
         raise NotDrupalVersionError
       end
-      raise NotDrupalVersionError, "Incompatible version for project #{extended_name}: #{temp_version.long}" if temp_version.core != core
+      raise NotDrupalVersionError, "Incompatible version for project #{self.extended_name}: #{temp_version.long}" if temp_version.core != self.core
       @version = temp_version
     end
 
