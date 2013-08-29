@@ -301,21 +301,14 @@ module Drupid
       @version = temp_version
     end
 
-    # Updates the version of this project to the latest recommended release;
-    # if no recommended release is available, tries to retrieve the version
-    # of the latest supported release; if no supported release is found, the version
-    # of this project is not modified.
-    # Raises an error if no release history for the project is found (presumably
-    # because no such project exists on drupal.org).
+    # Updates the version of this project to the latest (stable) release.
+    #
+    # See also: Drupid::Project.best_release
     #
     # *Requires:* a network connection.
     def update_version
-      v = recommended_release
-      v = supported_release unless v
-      if v
-        self.version = core.to_s + '-' + v
-        debug "Version updated: #{extended_name}"
-      end
+      self.version = self.best_release
+      debug "Version updated: #{extended_name}"
     end
 
     # Returns true if this object corresponds to Drupal core;
@@ -529,34 +522,34 @@ module Drupid
       super(tgt, args)
     end
 
-    # Returns the version of the latest recommended release of this project
-    # as a string, or nil if no recommended release can be found
-    # or the project does not exist at drupal.org.
-    #
-    # *Requires:* a network connection.
-    #
-    # See also: Drupid::Drush.pm_releases, Drupid::Project.supported_release
-    def recommended_release
-      output = Drush.pm_releases(name + '-' + core.to_s)
-      return unless output =~ /RELEASES FOR/
-      rl = Drush.recommended_release(output)
-      return rl.sub(/^#{core}-/, '') if rl
-      return nil
-    end
 
-    # Returns the version of the latest supported release
-    # as a string, or nil if no supported release can be found
-    # or the project does not exist at drupal.org.
-    #
-    # *Requires:* a network connection.
-    #
-    # See also: Drupid::Drush.pm_releases, Drupid::Project.recommended_release
-    def supported_release
-      output = Drush.pm_releases(name + '-' + core.to_s)
-      return nil unless output =~ /RELEASES FOR/
-      rl = Drush.supported_release(output)
-      return rl.sub(/^#{core}-/, '') if rl
-      return nil
+    # Returns a Version object corresponding to the latest (stable) release
+	  # of this project. If such release cannot be determined for whatever reason,
+	  # returns the current version of the project.
+    def best_release
+      begin
+        versions = Drush.pm_releases("#{self.name}-#{self.core}")
+      rescue Drupid::ErrorDuringExecution => e
+        owarn "Could not get release history for #{self.extended_name}"
+        blah e
+        return self.version
+      end
+      version_list = []
+      if self.drupal?
+        versions.each { |v| version_list.push(Version.new(self.core, v)) }
+      else
+        versions.each { |v| version_list.push(Version.new(self.core, v.sub("#{core}-"))) }
+      end
+      if self.has_version? # Exclude releases older than the current one
+        version_list = version_list.select { |v| v >= self.version }
+      end
+      return self.version if version_list.empty?
+      stable_releases = version_list.select { |v| v.stable? }
+      if stable_releases.empty?
+        version_list.max { |a,b| a.better b }
+      else
+        stable_releases.max { |a,b| a.better b }
+      end
     end
 
   end # Project

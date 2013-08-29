@@ -42,30 +42,13 @@ module Drupid
       output
     end
 
-    # Executes 'drush pm-releases --all' for the given project and
-    # returns the output of the command.
+      end
+    end
+
+    # Returns a list of all the existing versions of the specified project.
     def self.pm_releases project_name, options = {}
-      drush 'pm-releases', '--all', '--format=csv', project_name
-    end
-
-    # Parses the output of 'drush pm-releases' and returns
-    # the version of the latest recommended release, or nil
-    # if no such release exists.
-    def self.recommended_release pm_releases_output
-      CSV.parse(pm_releases_output).each do |l|
-        return l[1] if ((not l[3].nil?) and l[3].match(/Recommended/))
-      end
-      nil
-    end
-
-    # Parses the output of 'drush pm-releases' and returns
-    # the version of the latest supported release, or nil
-    # if no such release exists.
-    def self.supported_release pm_releases_output
-      CSV.parse(pm_releases_output).each do |l|
-        return l[1] if ((not l[3].nil?) and l[3].match(/Supported/))
-      end
-      nil
+      output = drush 'pm-releases', '--all', '--format=list', project_name
+      output.split("\n")
     end
 
     # Executes 'drush pm-download <project_name>' and
