@@ -124,8 +124,8 @@ module Drupid
       return false unless st.has_key?(project_name)
       type = st[project_name]['type']
       status = st[project_name]['status']
-      ('module' == type and project_status !~ /not installed/) or
-      ('theme'  == type and project_status =~ /^enabled/)
+      ('module' == type and status !~ /not installed/) or
+      ('theme'  == type and status =~ /^enabled/)
     end
 
   end # module Drush
