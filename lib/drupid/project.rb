@@ -430,7 +430,10 @@ module Drupid
     end
 
     def fetch
-      self.update_version if self.version.nil? and download_url.nil? and download_type.nil?
+      if self.version.nil? and download_url.nil? and download_type.nil?
+        debug "Updating version of #{self.extended_name}"
+        self.update_version
+      end
       # If the project has no version we fetch it even if it is cached.
       # If the project has a download type, we fetch it even if it is cached
       # (say the download type is 'git' and the revision is changed in the

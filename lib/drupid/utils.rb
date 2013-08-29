@@ -140,6 +140,7 @@ module Drupid
       cmd << ' >'    + Shellwords.shellescape(opts[:out]) if opts[:out]
       cmd << ' 2>'   + Shellwords.shellescape(opts[:err]) if opts[:err]
       cmd << ' 2>&1' if opts[:redirect_stderr_to_stdout]
+      debug "Pwd: #{Dir.pwd}"
       debug cmd
       return cmd if opts[:dry]
       output = %x|#{cmd}| # Run baby run!
