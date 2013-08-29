@@ -91,13 +91,6 @@ module Drupid
       return nil
     end
 
-    # Returns the version of Drupal as a String object (e.g., '7.12')
-    # if the specified path points to a Drupal site; returns nil otherwise.
-    def self.drupal_version path, options = {}
-      st = self.status(path, options)
-      return st['drupal-version']
-    end
-
     # Returns true if a Drupal's site is bootstrapped at the given path;
     # returns false otherwise.
     def self.bootstrapped?(path, options = {})

@@ -50,7 +50,7 @@ module Drupid
     # Returns the version of Drupal core in this platform, or
     # nil if the version cannot be determined.
     def version
-      if @drupal_project and @drupal_project.has_version?
+      if (@drupal_project and @drupal_project.has_version?) or load_drupal_version
         return @drupal_project.version
       end
       return nil
@@ -134,13 +134,9 @@ module Drupid
 
     # Retrieves information about Drupal core in this platform.
     def analyze_drupal_core
+      debug 'Analyzing Drupal Core...'
       @drupal_project = nil
-      vers = Drupid::Drush.drupal_version(local_path)
-      if vers
-        core = vers.match(/(\d+)\./)[1].to_i
-        @drupal_project = Drupid::Project.new('drupal', core, vers)
-        @drupal_project.local_path = self.local_path
-      end   
+      load_drupal_version
     end
 
     # Extracts information about the projects in this platform.
@@ -229,6 +225,30 @@ module Drupid
       end
       graph.write_to_graphic_file('svg')
     end
+
+  private
+
+  def load_drupal_version
+    # Drupal 7 stores VERSION in bootstrap.inc. Drupal 8 moved that to /core/includes.
+    bootstrap_files = ['core/includes/bootstrap.inc', 'includes/bootstrap.inc', 'modules/system/system.module']
+    bootstrap_files.each do |bf|
+      f = self.local_path+bf
+      next unless f.exist?
+      f.open('r').each_line do |l|
+        if l =~ /define.*'VERSION'.*'(.+)'/
+          v = $1
+          debug "Drupal version detected: #{v}"
+          core = v.match(/(\d+)\./)[1].to_i
+          @drupal_project = Drupid::Project.new('drupal', core, v)
+          @drupal_project.local_path = self.local_path
+          debug "Drupal platform has version: #{@drupal_project.version} (core: #{@drupal_project.version.core})"
+          return true
+        end
+      end
+    end
+    debug "Unable to detect version of Drupal at #{self.local_path}"
+    return false
+  end
 
   end # Platform
 end # Drupid
