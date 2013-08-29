@@ -430,39 +430,33 @@ module Drupid
     end
 
     def fetch
-      # Try to get the latest version if:
-      # (1) the project is not local;
-      # (2) it does not have a version already;
-      # (3) no download type has been explicitly given.
-      unless has_version? or download_url =~ /file:\/\// or download_type
-        update_version
-      end
+      self.update_version if self.version.nil? and download_url.nil? and download_type.nil?
       # If the project has no version we fetch it even if it is cached.
       # If the project has a download type, we fetch it even if it is cached
       # (say the download type is 'git' and the revision is changed in the
       # makefile, then the cached project must be updated accordingly).
-      if has_version? and !download_type and cached_location.exist?
-        @local_path = cached_location
-        debug "#{extended_name} is cached"
+      if self.has_version? and self.download_type.nil? and self.cached_location.exist?
+        @local_path = self.cached_location
+        debug "#{self.extended_name} is cached"
       else
-        blah "Fetching #{extended_name}"
-        if download_type
-          if download_url
-            src = download_url
-          elsif 'git' == download_type # Download from git.drupal.org
-            src = "http://git.drupal.org/project/#{name}.git"
+        blah "Fetching #{self.extended_name}"
+        if self.download_url.nil?
+          if 'git' == self.download_type
+            self.download_url = "http://git.drupal.org/project/#{name}.git"
           else
-            raise "No download URL specified for #{extended_name}" unless download_url
+            self.download_url = self.extended_name
           end
-        else
-          src = extended_name
         end
-        downloader = Drupid.makeDownloader src, cached_location.dirname.to_s, cached_location.basename.to_s, download_specs.merge({:type => download_type})
+        raise "No download URL specified for #{self.extended_name}" unless self.download_url
+        downloader = Drupid.makeDownloader  self.download_url,
+                                            self.cached_location.dirname.to_s,
+                                            self.cached_location.basename.to_s,
+                                            self.download_specs.merge({:type => download_type})
         downloader.fetch
         downloader.stage
         @local_path = downloader.staged_path
       end
-      reload_project_info unless drupal?
+      self.reload_project_info unless self.drupal?
     end
 
     # Returns the relative path where this project should be installed
