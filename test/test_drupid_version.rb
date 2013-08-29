@@ -45,6 +45,17 @@ class TestDrupidVersion < MiniTest::Unit::TestCase
     assert_equal '7.x-1.0-unstable5', v.long
   end
 
+  def test_damned_drupal_dev_version
+    # Yes, projects typically (always?) have NUM.x-dev, but Drupal has NUM.NUM-dev...
+    v = Drupid::Version.new(7, '7.24-dev')
+    assert_equal '7.x', v.core.to_s
+    assert_equal 7, v.major
+    assert_equal 24, v.patchlevel
+    assert_equal 'dev', v.extra
+    assert_equal '7.24-dev', v.short
+    assert_equal '7.x-7.24-dev', v.long
+  end
+
   def test_core
     core = Drupid::VersionCore.new '8.x'
     assert_equal 8, core.to_i
@@ -253,7 +264,7 @@ class TestDrupidVersion < MiniTest::Unit::TestCase
     vv = ['0.x', '0.9-alpha4', '0.9-beta0', '0.9', '1.x-dev',
           '1.x-dev2', '1.0-unstable1', '1.0-alpha4', '1.0-alpha40',
           '1.0-beta1', '1.0-beta12', '1.0-rc1', '1.0-rc2', '1.0-rc21',
-          '1.0', '1.1-beta1', '1.1', '2.x-dev']
+          '1.0', '1.1-dev', '1.1-beta1', '1.1', '2.x-dev']
     vv2 = vv.shuffle
     vv2.map! { |v| Drupid::Version.new(8, v) }
     vv2.sort!
@@ -270,7 +281,7 @@ class TestDrupidVersion < MiniTest::Unit::TestCase
   end
 
   def test_best_version
-    vv = ['0.x', '1.x-dev', '1.x-dev2', '2.x-dev', '1.0-unstable1',
+    vv = ['0.x', '1.x-dev', '1.x-dev2', '1.1-dev', '2.x-dev', '1.0-unstable1',
           '0.9-alpha4', '1.0-alpha4', '1.0-alpha40',
           '0.9-beta0', '1.0-beta1', '1.0-beta12', '1.1-beta1',
           '1.0-rc1', '1.0-rc2', '1.0-rc21', '0.9', '1.0', '1.1']

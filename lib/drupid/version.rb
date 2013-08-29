@@ -245,7 +245,6 @@ module Drupid
     def encode_extra(e)
       @extra_string = e.start_with?('-') ? e.sub(/-/, '') : e
       if e.match(/dev(\d*)$/)
-        @patchlevel = 'x'
         @extra_type = DEVELOPMENT
         @extra_num = ($~[1] == '') ? UNKNOWN : $~[1].to_i
         return
