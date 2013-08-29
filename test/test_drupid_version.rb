@@ -23,6 +23,7 @@
 require 'helper'
 
 class TestDrupidVersion < MiniTest::Unit::TestCase
+
   def test_version_object_creation
     v = Drupid::Version.new(7, '1.0-rc4')
     assert_instance_of Drupid::VersionCore, v.core, 'Core version should be a Drupid::VersionCore object'
@@ -33,33 +34,6 @@ class TestDrupidVersion < MiniTest::Unit::TestCase
     assert_equal 'rc4', v.extra
     assert_equal '1.0-rc4', v.short
     assert_equal '7.x-1.0-rc4', v.long
-
-    def test_core
-      core = Drupid::VersionCore.new '8.x'
-      assert_equal 8, core.to_i
-      assert_equal '8.x', core.to_s
-      core = Drupid::VersionCore.new '8'
-      assert_equal 8, core.to_i
-      assert_equal '8.x', core.to_s
-      core = Drupid::VersionCore.new '8.x-1.0'
-      assert_equal 8, core.to_i
-      assert_equal '8.x', core.to_s
-      core = Drupid::VersionCore.new 8
-      assert_equal 8, core.to_i
-      assert_equal '8.x', core.to_s
-      core = Drupid::VersionCore.new(Drupid::Version.new(8, '1.0'))
-      assert_equal 8, core.to_i
-      assert_equal '8.x', core.to_s
-      core2 = Drupid::VersionCore.new core
-      assert_equal 8, core2.to_i
-      assert_equal '8.x', core2.to_s
-      assert_raises Drupid::NotDrupalVersionError do
-        # We do not accept this as it is not distinguishable
-        # from a short project version.
-        core = Drupid::VersionCore.new '8.0'
-      end
-    end
-
     v = Drupid::Version.new(7, '1.0-unstable5')
     assert_equal 7, v.core.to_i
     assert_equal 1, v.major
@@ -69,6 +43,32 @@ class TestDrupidVersion < MiniTest::Unit::TestCase
     assert_equal 'unstable5', v.extra
     assert_equal '1.0-unstable5', v.short
     assert_equal '7.x-1.0-unstable5', v.long
+  end
+
+  def test_core
+    core = Drupid::VersionCore.new '8.x'
+    assert_equal 8, core.to_i
+    assert_equal '8.x', core.to_s
+    core = Drupid::VersionCore.new '8'
+    assert_equal 8, core.to_i
+    assert_equal '8.x', core.to_s
+    core = Drupid::VersionCore.new '8.x-1.0'
+    assert_equal 8, core.to_i
+    assert_equal '8.x', core.to_s
+    core = Drupid::VersionCore.new 8
+    assert_equal 8, core.to_i
+    assert_equal '8.x', core.to_s
+    core = Drupid::VersionCore.new(Drupid::Version.new(8, '1.0'))
+    assert_equal 8, core.to_i
+    assert_equal '8.x', core.to_s
+    core2 = Drupid::VersionCore.new core
+    assert_equal 8, core2.to_i
+    assert_equal '8.x', core2.to_s
+    assert_raises Drupid::NotDrupalVersionError do
+      # We do not accept this as it is not distinguishable
+      # from a short project version.
+      core = Drupid::VersionCore.new '8.0'
+    end
   end
 
   def test_version_short_and_long
