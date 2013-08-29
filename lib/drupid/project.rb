@@ -535,7 +535,7 @@ module Drupid
       if self.drupal?
         versions.each { |v| version_list.push(Version.new(self.core, v)) }
       else
-        versions.each { |v| version_list.push(Version.new(self.core, v.sub("#{core}-"))) }
+        versions.each { |v| version_list.push(Version.new(self.core, v.sub("#{self.core}-", ''))) }
       end
       if self.has_version? # Exclude releases older than the current one
         version_list = version_list.select { |v| v >= self.version }
