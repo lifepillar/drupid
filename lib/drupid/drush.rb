@@ -116,7 +116,7 @@ module Drupid
     # Options: verbose
     def self.installed?(site_path, project_name, project_path, options = {})
       begin
-        output = drush 'pm-info', '--format=yaml', projects_name
+        output = drush 'pm-info', '--format=yaml', project_name
       rescue # site not fully bootstrapped
         return false
       end
