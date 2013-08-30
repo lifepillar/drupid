@@ -32,49 +32,6 @@ module Drupid
       runBabyRun DRUSH, args
     end
 
-    # Executes 'drush pm-download <project_name>' and
-    # returns the output of the command.
-    # If :working_dir is set to an existing directory, move into that directory before
-    # executing the command.
-    #
-    # Options: source, destination, working_dir
-    def self.pm_download project_name, options = {}
-      args = ['pm-download', '-y']
-      args << "--source=#{options[:source]}" if options[:source]
-      args << "--destination\=#{options[:destination]}" if options[:destination]
-      args << "--variant=profile-only"
-      args << "--verbose" if $VERBOSE
-      args << project_name
-      if options[:working_dir] and File.directory?(options[:working_dir])
-        wd = options[:working_dir]
-      else
-        wd = FileUtils.pwd
-      end
-      output = nil
-      FileUtils.cd(wd) do
-        output = runBabyRun DRUSH, args, :redirect_stderr_to_stdout => true
-      end
-      output
-    end
-
-    # Parses the output of 'drush pm-download' and returns
-    # the path to the downloaded project, or nil
-    # if the path cannot be determined.
-    def self.download_path pm_download_output
-      pm_download_output.match(/^\s*Project.+downloaded to *(.\[.+[\n\r])?\s*(.+)\./)
-      return File.expand_path($~[2]) if $~
-      return nil
-    end
-
-    # Parses the output of 'drush pm-download' and returns
-    # the version of the downloaded project, or nil
-    # if the version cannot be determined.
-    def self.downloaded_version pm_download_output
-      pm_download_output.match(/^\s*Project.+\((.+)\) +downloaded +to/)
-      return $~[1] if $~
-      return nil
-    end
-
     # Returns true if a Drupal's site is bootstrapped at the given path;
     # returns false otherwise.
     def self.bootstrapped?(path, options = {})

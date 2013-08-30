@@ -90,7 +90,7 @@ module Drupid
       when %r[^https?://svn\.] then Subversion
       when %r[\.git$] then Git
       when %r[\/] then Curl
-      else Drush
+      else Curl
       end
     end
 
@@ -225,25 +225,6 @@ module Drupid
       end
 
     end # Curl
-
-
-    class Drush < Curl
-      def initialize url, dest, name, download_specs = {}
-        super
-        @tarball_path = @dest + @name
-      end
-
-      def _fetch
-      output = Drupid::Drush.pm_download url, :destination => dest
-        p = Drupid::Drush.download_path(output)
-        if p
-          @tarball_path = Pathname.new(p).realpath
-        else
-          raise "Download failed for project #{name} (using Drush):\n#{output}"
-        end
-      end
-    end # Drush
-
 
     # Detect and download from Apache Mirror
     class CurlApacheMirror < Curl

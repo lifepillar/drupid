@@ -274,6 +274,7 @@ module Drupid
       @version = vers ? Version.from_s(@core.to_s + '-' + vers) : nil
       @proj_type = ('drupal' == @name) ? 'drupal' : nil
       @info_file = nil
+      @release_xml = nil
     end
 
     # Returns true if a version is specified for this project, false otherwise.
@@ -304,24 +305,16 @@ module Drupid
       @version = temp_version
     end
 
-    # Updates the version of this project to the latest (stable) release,
-    # and updates the download URL accordingly.
+    # Updates the version of this project to the latest (stable) release.
     #
     # Retrieves the release information for this project from http://updates.drupal.org.
     #
     # See also: Drupid::Project.best_release
-    #
-    # *Requires:* a network connection.
     def update_version
-      begin
-        xml = Nokogiri::XML(open("http://updates.drupal.org/release-history/#{self.name}/#{self.core}"))
-        version_nodes = xml.xpath("/project/releases/release[status='published']/version")
-      rescue Exception => e
-        owarn "Could not get release history for #{self.extended_name}"
-        blah e
-        return self.version
-      end
+      self.fetch_release_history if @release_xml.nil?
+      return self.version unless @release_xml
       version_list = []
+      version_nodes = @release_xml.xpath("/project/releases/release[status='published']/version")
       version_nodes.each do |n|
         v = n.child.to_s
         # Remove version specifications that do not start with self.core.
@@ -333,18 +326,36 @@ module Drupid
       end
       self.version = self.best_release(version_list)
       debug "Version updated: #{extended_name}"
-      # Update download URL
-      if xml.at_xpath('/project/releases/release/files/file/variant').nil?
+    end
+
+    # Updates the download URL for the current version of this project.
+    #
+    # Retrieves the release information for this project from http://updates.drupal.org.
+    def update_download_url
+      self.fetch_release_history if @release_xml.nil?
+      return if @release_xml.nil?
+      if @release_xml.at_xpath('/project/releases/release/files/file/variant').nil?
         variant = ''
       else
         variant = "[variant='profile-only']"
       end
       v = self.drupal? ? self.version.short : self.version.long
-      url_node = xml.at_xpath("/project/releases/release[status='published'][version='#{v}']/files/file#{variant}/url")
+      url_node = @release_xml.at_xpath("/project/releases/release[status='published'][version='#{v}']/files/file#{variant}/url")
       if url_node.nil?
         owarn "Could not get download URL from http://updates.drupal.org for #{extended_name}"
       else
         self.download_url = url_node.child.to_s
+      end
+    end
+
+    # Fetches the release history for this project from http://updates.drupal.org.
+    def fetch_release_history
+      begin
+        @release_xml = Nokogiri::XML(open("http://updates.drupal.org/release-history/#{self.name}/#{self.core}"))
+      rescue Exception
+        owarn "Could not get release history for #{self.extended_name}"
+        blah e
+        @release_xml = nil
       end
     end
 
@@ -480,13 +491,10 @@ module Drupid
         debug "#{self.extended_name} is cached"
       else
         blah "Fetching #{self.extended_name}"
-        if self.download_url.nil?
-          if 'git' == self.download_type
-            self.download_url = "http://git.drupal.org/project/#{name}.git"
-          else
-            self.download_url = self.extended_name
-          end
+        if 'git' == self.download_type and self.download_url.nil?
+          self.download_url = "http://git.drupal.org/project/#{name}.git"
         end
+        self.update_download_url if self.download_url.nil?
         raise "No download URL specified for #{self.extended_name}" unless self.download_url
         downloader = Drupid.makeDownloader  self.download_url,
                                             self.cached_location.dirname.to_s,
