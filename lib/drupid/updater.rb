@@ -308,7 +308,7 @@ module Drupid
           odie "Failed to verify the integrity of library #{lib.extended_name}: #{ex}"
         end
         if diff.empty?
-          log.notice("[OK]      #{lib.extended_name} (#{relpath})")
+          log.notice("#{Tty.white}[OK]#{Tty.reset}  #{lib.extended_name} (#{relpath})")
         else
           log.action(UpdateLibraryAction.new(platform, lib))
           log.notice(diff.join("\n"))
@@ -372,7 +372,7 @@ module Drupid
         end
         p = (makefile_project.drupal?) ? '' : ' (' + (platform.contrib_path + makefile_project.target_path).to_s + ')'
         if diff.empty?
-          @log.notice("[OK]      #{platform_project.extended_name}#{p}")
+          @log.notice("#{Tty.white}[OK]#{Tty.reset}  #{platform_project.extended_name}#{p}")
         elsif makefile_project.has_patches?
           log.action(update_action)
           log.notice "#{makefile_project.extended_name}#{p} will be patched"
@@ -384,13 +384,13 @@ module Drupid
       when 1 # upgrade
         log.action(update_action)
       when -1 # downgrade
-        log.action(update_action)
+        log.action(UpdateProjectAction.new(platform, makefile_project, :downgrade => true))
         if platform_project.drupal?
           if @platform.bootstrapped?
-            log.error("#{platform_project.extended_name} cannot be downgraded because it is bootstrapped")
+            log.error("#{platform_project.extended_name} cannot be downgraded because it is bootstrapped (use --force to override)")
           end
         elsif platform_project.installed?(site)
-          log.error("#{platform_project.extended_name}#{p} must be uninstalled before downgrading")
+          log.error("#{platform_project.extended_name}#{p} must be uninstalled before downgrading (use --force to override)")
         end
       when nil # One or both projects have no version
         # Check whether the content of the projects is consistent
@@ -400,7 +400,7 @@ module Drupid
           odie "Failed to verify the integrity of #{component.extended_name}: #{ex}"
         end
         if diff.empty?
-          log.notice("[OK]      #{platform_project.extended_name}#{p}")
+          log.notice("#{Tty.white}[OK]#{Tty.reset}  #{platform_project.extended_name}#{p}")
         else
           log.action(update_action)
           log.notice(diff.join("\n"))
@@ -453,7 +453,7 @@ module Drupid
       # Adds an error message to the log.
       def error(msg)
         @errors << msg
-        puts @errors.last
+        ofail @errors.last
       end
 
       # Returns true if this log contains error messages;
@@ -465,7 +465,7 @@ module Drupid
       # Adds a warning to the log.
       def warning(msg)
         @warnings << msg
-        puts @warnings.last
+        owarn @warnings.last
       end
 
       def warnings?
@@ -523,17 +523,19 @@ module Drupid
 
 
     class UpdateProjectAction < AbstractAction
-      def initialize(p, proj)
+      def initialize p, proj, opts = { :downgrade => false }
         raise "#{proj.extended_name} does not exist locally" unless proj.exist?
         raise "Unknown type for #{proj.extended_name}" unless proj.proj_type
-        super
+        @downgrade = opts[:downgrade]
+        super(p, proj)
       end
 
       def msg
+        label = @downgrade ? 'Demote' : 'Update'
         if old_project = platform.get_project(component.name)
-          "#{Tty.blue}[Update]#{Tty.white}  #{old_project.extended_name} => #{component.extended_name}#{Tty.reset} (#{platform.dest_path(component)})"
+          "#{Tty.blue}[#{label}]#{Tty.white}  #{component.name}: #{old_project.version.long} => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
         else
-          "#{Tty.blue}[Update]#{Tty.white} #{component.extended_name}#{Tty.reset} (#{platform.dest_path(component)})"
+          "#{Tty.blue}[#{label}]#{Tty.white}  #{component.name}: => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
         end
       end
 
@@ -629,7 +631,7 @@ module Drupid
 
     class InstallLibraryAction < UpdateLibraryAction
       def msg
-        "#{Tty.blue}[Install]#{Tty.white} Library #{component.extended_name}#{Tty.reset} (#{platform.contrib_path + component.target_path})"
+        "#{Tty.blue}[Install]#{Tty.white}  Library #{component.extended_name}#{Tty.reset} (#{platform.contrib_path + component.target_path})"
       end
     end
   
@@ -659,7 +661,7 @@ module Drupid
 
       def msg
         src = component.local_path.relative_path_from(platform.local_path)
-        "#{Tty.blue}[Move]#{Tty.reset}    From #{src} to #{@destination}"
+        "#{Tty.blue}[Move]#{Tty.white}    #{component.extended_name}:#{Tty.reset} #{src} => #{@destination}"
       end
     end # MoveAction
 

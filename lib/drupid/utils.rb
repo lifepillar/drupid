@@ -59,7 +59,7 @@ module Drupid
       class <<self
         def blue;   bold      34; end
         def white;  bold      39; end
-        def red;    underline 31; end
+        def red;    color     31; end
         def yellow; bold      33; end
         def purple; bold      35; end
         def reset;  escape     0; end
@@ -90,7 +90,7 @@ module Drupid
 
     # Print a warning message.
     def owarn warning
-      puts "#{Tty.red}Warning#{Tty.reset}: #{warning}"
+      puts "#{Tty.red}Warn#{Tty.reset}: #{warning}"
     end
 
     # Prints an error message.
@@ -119,7 +119,7 @@ module Drupid
     # Prints a notice if in verbose mode.
     def blah notice
       return unless $VERBOSE
-      puts notice.to_s
+      puts "#{Tty.green}==>#{Tty.reset} #{notice}"
     end
 
     # Executes a command. Returns the output of the command.
