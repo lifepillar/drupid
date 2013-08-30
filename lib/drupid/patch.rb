@@ -39,6 +39,7 @@ module Drupid
     # Downloads the patch into the current directory.
     def fetch
       dst = Pathname.pwd+File.basename(@url.to_s)
+      blah "Fetching patch..."
       begin
         curl @url.to_s, '-o', dst
       rescue
