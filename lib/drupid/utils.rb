@@ -95,7 +95,7 @@ module Drupid
 
     # Prints an error message.
     def ofail error, *info
-      puts "#{Tty.red}Error#{Tty.reset}: #{error}"
+      puts "#{Tty.red}Fail#{Tty.reset}: #{error}"
       puts info unless info.empty?
     end
 
