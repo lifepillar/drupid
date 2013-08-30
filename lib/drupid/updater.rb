@@ -667,7 +667,7 @@ module Drupid
     class DeleteAction < AbstractAction
       def fire!
         debug "Deleting #{component.local_path}"
-        dont_debug { component.local_path.rmtree }
+        dont_debug { component.local_path.rmtree if component.local_path.exist? }
         @pending = false
       end
 
