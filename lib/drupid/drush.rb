@@ -84,7 +84,7 @@ module Drupid
       end
       st = YAML.load(output)
       return false unless st
-      return (st['bootstrap'] =~ 'Successful') ? true : false
+      return (st['bootstrap'] =~ /Successful/) ? true : false
     end
 
     # Returns true if the project at the given path is an enabled theme
