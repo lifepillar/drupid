@@ -137,7 +137,7 @@ module Drupid
     def patch
       fetch unless exist?
       return unless has_patches?
-      dont_debug { patched_location.rmtree } # Make sure that no previous patched copy exists
+      dont_debug { patched_location.rmtree if patched_location.exist? } # Make sure that no previous patched copy exists
       dont_debug { @local_path.ditto patched_location }
       @local_path = patched_location
       # Download patches
