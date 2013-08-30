@@ -153,7 +153,7 @@ module Drupid
 
       # Retrieves a file from this object's URL.
       def fetch
-        @tarball_path.rmtree if @tarball_path.exist?
+        dont_debug { @tarball_path.rmtree if @tarball_path.exist? }
         begin
           dont_debug { @dest.mkpath }
           _fetch
@@ -190,7 +190,7 @@ module Drupid
               # We cannot move the temporary directory we are in, so we copy its content
               src = Pathname.pwd
               target = wd + src.basename
-              target.rmtree if target.exist? # Overwrite
+              dont_debug { target.rmtree if target.exist? } # Overwrite
               dont_debug { target.mkpath }
               src.ditto target
             end
