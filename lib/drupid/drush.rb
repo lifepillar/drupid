@@ -28,16 +28,12 @@ module Drupid
 
     DRUSH = `which drush`.strip
 
-    def self.drush *args
-      runBabyRun DRUSH, args
-    end
-
     # Returns true if a Drupal's site is bootstrapped at the given path;
     # returns false otherwise.
     def self.bootstrapped?(path, options = {})
       output = ''
       FileUtils.cd(path) do
-        output = drush 'core-status', '--format=yaml'
+        output = %x|#{DRUSH} core-status --format=yaml|
       end
       st = YAML.load(output)
       return false unless st
