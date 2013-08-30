@@ -120,9 +120,12 @@ module Drupid
         @local_path = cached_location
         debug "#{extended_name} is cached"
       else
-        raise "No download URL specified for #{extended_name}" unless download_url
+        raise "No download URL specified for #{extended_name}" if download_url.nil?
         blah "Fetching #{extended_name}"
-        downloader = Drupid.makeDownloader download_url.to_s, cached_location.dirname.to_s, cached_location.basename.to_s, download_specs
+        downloader = Drupid.makeDownloader self.download_url,
+                                           self.cached_location.dirname.to_s,
+                                           self.cached_location.basename.to_s,
+                                           self.download_specs
         downloader.fetch
         downloader.stage
         @local_path = downloader.staged_path
