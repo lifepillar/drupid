@@ -304,7 +304,10 @@ module Drupid
       @version = temp_version
     end
 
-    # Updates the version of this project to the latest (stable) release.
+    # Updates the version of this project to the latest (stable) release,
+    # and updates the download URL accordingly.
+    #
+    # Retrieves the release information for this project from http://updates.drupal.org.
     #
     # See also: Drupid::Project.best_release
     #
@@ -330,6 +333,19 @@ module Drupid
       end
       self.version = self.best_release(version_list)
       debug "Version updated: #{extended_name}"
+      # Update download URL
+      if xml.at_xpath('/project/releases/release/files/file/variant').nil?
+        variant = ''
+      else
+        variant = "[variant='profile-only']"
+      end
+      v = self.drupal? ? self.version.short : self.version.long
+      url_node = xml.at_xpath("/project/releases/release[status='published'][version='#{v}']/files/file#{variant}/url")
+      if url_node.nil?
+        owarn "Could not get download URL from http://updates.drupal.org for #{extended_name}"
+      else
+        self.download_url = url_node.child.to_s
+      end
     end
 
     # Returns true if this object corresponds to Drupal core;

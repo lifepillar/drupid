@@ -504,22 +504,24 @@ class TestDrupidProject < MiniTest::Unit::TestCase
   end
 
   # Requires an Internet connection
-   def test_best_release_d6
-     p = Drupid::Project.new('drupal', 6)
-     p.update_version
-     assert_instance_of Drupid::Version, p.version
-     assert_equal '6.28', p.version.short
-     assert_equal 6, p.version.core.to_i
-   end
+  def test_best_release_d6
+    p = Drupid::Project.new('drupal', 6)
+    p.update_version
+    assert_instance_of Drupid::Version, p.version
+    assert_equal '6.28', p.version.short
+    assert_equal 6, p.version.core.to_i
+    assert_equal 'http://ftp.drupal.org/files/projects/drupal-6.28.tar.gz', p.download_url
+  end
 
-   # Requires an Internet connection
-   def test_best_release_cck6
-     p = Drupid::Project.new('cck', 6)
-     p.update_version
-     assert_instance_of Drupid::Version, p.version
-     assert_equal '6.x-2.9', p.version.long
-     assert_equal 6, p.version.core.to_i
-   end
+  # Requires an Internet connection
+  def test_best_release_cck6
+    p = Drupid::Project.new('cck', 6)
+    p.update_version
+    assert_instance_of Drupid::Version, p.version
+    assert_equal '6.x-2.9', p.version.long
+    assert_equal 6, p.version.core.to_i
+    assert_equal 'http://ftp.drupal.org/files/projects/cck-6.x-2.9.tar.gz', p.download_url
+  end
 
 end # TestDrupidProject
 
