@@ -351,7 +351,11 @@ module Drupid
     # Fetches the release history for this project from http://updates.drupal.org.
     def fetch_release_history
       begin
-        @release_xml = Nokogiri::XML(open("http://updates.drupal.org/release-history/#{self.name}/#{self.core}"))
+        debug "Getting release history from http://updates.drupal.org/release-history/#{self.name}/#{self.core}"
+        dont_debug do
+          @release_xml = Nokogiri::XML(open("http://updates.drupal.org/release-history/#{self.name}/#{self.core}"))
+        end
+        debug "Release history retrieved"
       rescue Exception
         owarn "Could not get release history for #{self.extended_name}"
         blah e

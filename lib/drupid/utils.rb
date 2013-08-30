@@ -239,7 +239,7 @@ module Drupid
         yield
       ensure
         FileUtils.chdir wd
-        tmp.rmtree
+        dont_debug { tmp.rmtree }
       end
     end
 
@@ -292,6 +292,17 @@ module Drupid
       p = Pathname.new(path)
       blah "Writing #{p}"
       p.open("w") { |f| f.write(content) }
+    end
+
+    # Temporarily forces $DEBUG = false in the given block.
+    #
+    # This is used to suppress some harmless but annoying exception messages
+    # from some methods, e.g., FileUtils.mkpath.
+    def dont_debug
+      saved_debug = $DEBUG
+      $DEBUG = false
+      yield
+      $DEBUG = saved_debug
     end
 
   end # Utils

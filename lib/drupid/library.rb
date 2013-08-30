@@ -45,7 +45,7 @@ module Drupid
     end
 
     def fetch
-      cached_location.rmtree if cached_location.exist?
+      dont_debug { cached_location.rmtree }
       super
     end
   end # Library

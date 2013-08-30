@@ -572,8 +572,7 @@ module Drupid
         args << '--delete'
         component.ignore_paths.each { |p| args << "--exclude=#{p}" }
         dst_path = platform.local_path + platform.dest_path(component)
-        debug "Pathname.mkpath may raise harmless exceptions"
-        dst_path.mkpath unless dst_path.exist?
+        dont_debug { dst_path.mkpath }
         args << component.local_path.to_s + '/'
         args << dst_path.to_s + '/'
         begin
@@ -616,8 +615,7 @@ module Drupid
         args << '--delete'
         component.ignore_paths.each { |p| args << "--exclude=#{p}" }
         dst_path = platform.local_path + platform.contrib_path + component.target_path
-        debug "Pathname.mkpath may raise harmless exceptions"
-        dst_path.mkpath unless dst_path.exist?
+        dont_debug { dst_path.mkpath }
         args << component.local_path.to_s + '/'
         args << dst_path.to_s + '/'
         begin
@@ -648,10 +646,10 @@ module Drupid
           debug "Moving #{component.local_path} to #{dst}"
           if dst.exist?
             debug "#{dst} already exists, it will be deleted"
-            dst.rmtree
+            dont_debug { dst.rmtree }
           end
-          dst.parent.mkpath
-          FileUtils.mv component.local_path.to_s, dst.to_s
+          dont_debug { dst.parent.mkpath }
+          dont_debug { FileUtils.mv component.local_path.to_s, dst.to_s }
         else
           blah "Cannot move #{component.local_path.relative_path_from(platform.local_path)}\n" +
             "(It does not exist any longer)"
@@ -668,7 +666,8 @@ module Drupid
 
     class DeleteAction < AbstractAction
       def fire!
-        component.local_path.rmtree if component.local_path.exist?
+        debug "Deleting #{component.local_path}"
+        dont_debug { component.local_path.rmtree }
         @pending = false
       end
 

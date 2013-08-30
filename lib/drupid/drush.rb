@@ -55,15 +55,11 @@ module Drupid
     # Options: verbose
     def self.installed?(site_path, project_name, project_path, options = {})
       output = nil
-      begin
-        FileUtils.cd(site_path) do
-          # Redirect stderr to stdout because we do not want to output
-          # Drush's error messages when Drupid is run in verbose mode.
-          output = runBabyRun DRUSH, 'pm-info', '--format=yaml', project_name,
-            :redirect_stderr_to_stdout => true
-        end
-      rescue # site not fully bootstrapped
-        return false
+      FileUtils.cd(site_path) do
+        # Redirect stderr to stdout because we do not want to output
+        # Drush's error messages when Drupid is run in verbose mode.
+        output = %x|#{DRUSH} pm-info --format=yaml #{project_name} 2>&1|
+        return false unless $?.success? # site not fully bootstrapped
       end
       st = YAML.load(output)
       return false unless st.has_key?(project_name)

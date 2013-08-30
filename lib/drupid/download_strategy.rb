@@ -155,8 +155,7 @@ module Drupid
       def fetch
         @tarball_path.rmtree if @tarball_path.exist?
         begin
-          debug "Pathname.mkpath may raise harmless exceptions"
-          @dest.mkpath unless @dest.exist?
+          dont_debug { @dest.mkpath }
           _fetch
         rescue Exception => e
           ignore_interrupts { @tarball_path.unlink if @tarball_path.exist? }
@@ -173,8 +172,8 @@ module Drupid
       # Invokes #fetch to retrieve the file if needed.
       def stage wd = @dest
         fetch unless @tarball_path.exist?
-        debug "Pathname.mkpath may raise harmless exceptions"
-        wd.mkpath unless wd.exist?
+        dont_debug { wd.mkpath }
+        debug "Staging into #{wd}"
         target = wd + @tarball_path.basename
         type = @tarball_path.compression_type
         if type
@@ -185,27 +184,31 @@ module Drupid
             if 1 == content.size and content.first.directory?
               src = content.first
               target = wd + src.basename
-              FileUtils.mv src.to_s, wd.to_s, :force => true, :verbose => $DEBUG
+              debug "Moving #{src} into #{wd}"
+              dont_debug { FileUtils.mv src.to_s, wd.to_s, :force => true }
             else # the archive did not have a root folder or it expanded to a file instead of a folder
               # We cannot move the temporary directory we are in, so we copy its content
               src = Pathname.pwd
               target = wd + src.basename
               target.rmtree if target.exist? # Overwrite
-              target.mkpath
+              dont_debug { target.mkpath }
               src.ditto target
             end
             debug "Temporary staging target: #{target}"
           end
         elsif wd != @dest
-          FileUtils.mv @tarball_path.to_s, wd.to_s, :force => true, :verbose => $DEBUG
-        end
+          debug "Moving #{@tarball_path} into #{wd}"
+          dont_debug { FileUtils.mv @tarball_path.to_s, wd.to_s, :force => true }
+       end
         if @name and @name != target.basename.to_s
           new_path = target.dirname + @name
-          new_path.rmtree if new_path.exist? # Overwrite
+          dont_debug { new_path.rmtree if new_path.exist? }
+          debug "Renaming from #{target} to #{new_path}"
           File.rename target.to_s, new_path.to_s
           target = target.dirname+@name
         end
         @staged_path = target
+        debug "Staging completed"
       end
   
     private
@@ -312,8 +315,8 @@ module Drupid
       # Invokes #fetch to retrieve the file if needed.
       def stage wd = @dest
         fetch unless @clone.exist?
-        debug "Pathname.mkpath may raise harmless exceptions"
-        wd.mkpath unless wd.exist?
+        dont_debug { wd.mkpath }
+        debug "Staging into #{wd}"
         target = wd + @clone.basename
         Dir.chdir @clone do
           if @specs.has_key?('branch')
@@ -369,8 +372,8 @@ module Drupid
 
       def stage wd = @dest
         fetch unless @co.exist?
-        debug "Pathname.mkpath may raise harmless exceptions"
-        wd.mkpath unless wd.exist?
+        dont_debug { wd.mkpath }
+        debug "Staging into #{wd}"
         target = wd + @co.basename
         svn 'export', '--force', @co, target
       end
@@ -430,16 +433,16 @@ module Drupid
 
       def stage wd = @dest
         fetch unless @co.exist?
-        debug "Pathname.mkpath may raise harmless exceptions"
-        wd.mkpath unless wd.exist?
+        dont_debug { wd.mkpath }
+        debug "Staging into #{wd}"
         target = wd + @co.basename
-        FileUtils.cp_r Dir[(@co+"{.}").to_s], target
+        dont_debug { FileUtils.cp_r Dir[(@co+"{.}").to_s], target }
 
         require 'find'
         Find.find(Dir.pwd) do |path|
           if FileTest.directory?(path) && File.basename(path) == "CVS"
             Find.prune
-            FileUtil.rm_r path, :force => true
+            dont_debug { FileUtils.rm_r path, :force => true }
           end
         end
       end
@@ -477,8 +480,8 @@ module Drupid
 
       def stage wd = @dest
         fetch unless @co.exist?
-        debug "Pathname.mkpath may raise harmless exceptions"
-        wd.mkpath unless wd.exist?
+        dont_debug { wd.mkpath }
+        debug "Staging into #{wd}"
         dst = wd + @co.basename
         Dir.chdir @clone do
           #if @spec and @ref
