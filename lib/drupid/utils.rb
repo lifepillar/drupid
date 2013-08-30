@@ -153,9 +153,6 @@ module Drupid
 
     def curl *args
       curl = Pathname.new(which 'curl')
-      raise "curl not found" unless curl.exist?
-      raise "curl is not executable" unless curl.executable?
-
       args = ['-qf#LA', DRUPID_USER_AGENT, *args]
       args << "--insecure" #if MacOS.version < 10.6
       args << "--silent" unless $VERBOSE
