@@ -19,6 +19,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+require 'nokogiri'
+require 'open-uri'
 
 module Drupid
 
@@ -308,7 +310,25 @@ module Drupid
     #
     # *Requires:* a network connection.
     def update_version
-      self.version = self.best_release
+      begin
+        xml = Nokogiri::XML(open("http://updates.drupal.org/release-history/#{self.name}/#{self.core}"))
+        version_nodes = xml.xpath("/project/releases/release[status='published']/version")
+      rescue Exception => e
+        owarn "Could not get release history for #{self.extended_name}"
+        blah e
+        return self.version
+      end
+      version_list = []
+      version_nodes.each do |n|
+        v = n.child.to_s
+        # Remove version specifications that do not start with self.core.
+        # This seemingly superfluous test is needed because, for example,
+        # imce-7.x has a 'master' version (oh my!).
+        next if v !~ /^#{self.core.to_i}\./
+        v.sub!("#{self.core}-", '') unless self.drupal?
+        version_list.push(Version.new(self.core, v))
+      end
+      self.version = self.best_release(version_list)
       debug "Version updated: #{extended_name}"
     end
 
@@ -521,27 +541,9 @@ module Drupid
     end
 
 
-    # Returns a Version object corresponding to the latest (stable) release
-	  # of this project. If such release cannot be determined for whatever reason,
-	  # returns the current version of the project.
-    def best_release
-      begin
-        versions = Drush.pm_releases("#{self.name}-#{self.core}")
-      rescue ErrorDuringExecution => e
-        owarn "Could not get release history for #{self.extended_name}"
-        blah e
-        return self.version
-      end
-      # Remove version specifications that do not start with self.core.
-      # This seemingly superfluous loop is needed because, for example,
-      # 'drush pm-releases --all imce-7.x' returns 'master' as a version (oh my!).
-      versions.delete_if { |v| v !~ /^#{self.core.to_i}\./ }
-      version_list = []
-      if self.drupal?
-        versions.each { |v| version_list.push(Version.new(self.core, v)) }
-      else
-        versions.each { |v| version_list.push(Version.new(self.core, v.sub("#{self.core}-", ''))) }
-      end
+    # Returns the "best" version among those in the given list.
+	  # Returns the current version of the project when version_list is empty.
+    def best_release version_list
       if self.has_version? # Exclude releases older than the current one
         version_list = version_list.select { |v| v >= self.version }
       end

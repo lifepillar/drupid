@@ -503,6 +503,24 @@ class TestDrupidProject < MiniTest::Unit::TestCase
     assert_equal 'themes/harbour/maternavis', p.target_path.to_s
   end
 
+  # Requires an Internet connection
+   def test_best_release_d6
+     p = Drupid::Project.new('drupal', 6)
+     p.update_version
+     assert_instance_of Drupid::Version, p.version
+     assert_equal '6.28', p.version.short
+     assert_equal 6, p.version.core.to_i
+   end
+
+   # Requires an Internet connection
+   def test_best_release_cck6
+     p = Drupid::Project.new('cck', 6)
+     p.update_version
+     assert_instance_of Drupid::Version, p.version
+     assert_equal '6.x-2.9', p.version.long
+     assert_equal 6, p.version.core.to_i
+   end
+
 end # TestDrupidProject
 
 class TestDrupidProjectFetchAndPatch < MiniTest::Unit::TestCase

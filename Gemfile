@@ -1,6 +1,7 @@
 source "http://rubygems.org/"
 
 gem "ansi"
+gem "nokogiri"
 gem "rake"
 gem "rdoc"
 

@@ -32,12 +32,6 @@ module Drupid
       runBabyRun DRUSH, args
     end
 
-    # Returns a list of all the existing versions of the specified project.
-    def self.pm_releases project_name, options = {}
-      output = drush 'pm-releases', '--all', '--format=list', project_name
-      output.split("\n")
-    end
-
     # Executes 'drush pm-download <project_name>' and
     # returns the output of the command.
     # If :working_dir is set to an existing directory, move into that directory before
