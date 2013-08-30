@@ -500,7 +500,7 @@ module Drupid
         end
         self.update_download_url if self.download_url.nil?
         raise "No download URL specified for #{self.extended_name}" unless self.download_url
-        downloader = Drupid.makeDownloader  self.download_url,
+        downloader = Drupid.makeDownloader  self.download_url.to_s,
                                             self.cached_location.dirname.to_s,
                                             self.cached_location.basename.to_s,
                                             self.download_specs.merge({:type => download_type})
