@@ -24,7 +24,7 @@ require 'yaml'
 module Drupid
 
   # A wrapper around drush.
-  module Drush extend Drupid::Utils
+  module Drush
 
     # Returns true if a Drupal's site is bootstrapped at the given path;
     # returns false otherwise.
@@ -61,6 +61,14 @@ module Drupid
       status = st[project_name]['status']
       ('module' == type and status !~ /not installed/) or
       ('theme'  == type and status =~ /^enabled/)
+    end
+
+    # Runs drush updatedb at the specified path.
+    # Returns true upon success, false upon failure.
+    def self.updatedb site_path
+      FileUtils.cd(site_path) do
+        system('drush updatedb -y')
+      end
     end
 
   end # module Drush
