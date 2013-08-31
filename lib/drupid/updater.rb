@@ -36,11 +36,12 @@ module Drupid
 
     # Creates a new updater for a given makefile and a given platform.
     # For multisite platforms, optionally specify a site to synchronize.
-    def initialize(makefile, platform, site_name = nil)
+    def initialize(makefile, platform, options = { :site => nil, :force => false })
       @makefile = makefile
       @platform = platform
-      @site = site_name
+      @site = options[:site]
       @log = Log.new
+      @force_changes = options[:force]
       #
       @libraries_paths = Array.new
       @core_projects = Array.new
@@ -210,10 +211,20 @@ module Drupid
       pending_delete = @platform.project_names - processed
       pending_delete.each do |p|
         proj = platform.get_project(p)
-        if proj.installed?(site)
-          log.error "#{proj.extended_name} cannot be deleted because it is installed"
-        end
         log.action(DeleteAction.new(platform, proj))
+        if which('drush').nil?
+          if @force_changes
+            owarn "Forcing deletion."
+          else
+            log.error "#{proj.extended_name}: use --force to force deletion or install Drush >=6.0."
+          end
+        elsif proj.installed?(site)
+          if @force_changes
+            owarn "Deleting an installed/enabled project."
+          else
+            log.error "#{proj.extended_name} cannot be deleted because it is installed"
+          end
+        end
       end
     end
 
@@ -243,26 +254,35 @@ module Drupid
         if @platform.local_path + new_path != platform_project.local_path
           log.action(MoveAction.new(@platform, platform_project, new_path))
           if (@platform.local_path + new_path).exist?
-            log.error("#{new_path} already exists. Use --force to overwrite.")
+            if @force_changes
+              owarn "Overwriting existing path: #{new_path}"
+            else
+              log.error("#{new_path} already exists. Use --force to overwrite.")
+            end
           end
         end
         # Compare versions and log suitable actions
         _compare_versions project, platform_project
-
-      # If analyzing the platform does not detect the project (e.g., Fusion),
-      # we try to see if the directory exists where it is supposed to be.
-      elsif (@platform.local_path + @platform.dest_path(project)).exist?
-        begin
-          platform_project = PlatformProject.new(@platform, @platform.local_path + @platform.dest_path(project))
-        rescue => ex
-          log.error("#{platform_project.relative_path} exists, but cannot be analyzed: #{ex}")
-          log.action(UpdateProjectAction.new(@platform, project))
+      else
+        # If analyzing the platform does not allow us to detect the project (e.g., Fusion),
+        # we try to see if the directory exists where it is supposed to be.
+        proj_path = @platform.local_path + @platform.dest_path(project)
+        if proj_path.exist?
+          begin
+            platform_project = PlatformProject.new(@platform, proj_path)
+            _compare_versions project, platform_project
+          rescue => ex
+            log.action(UpdateProjectAction.new(@platform, project))
+            if @force_changes
+              owarn "Overwriting existing path: #{proj_path}"
+            else
+              log.error("#{proj_path} exists, but was not recognized as a project (use --force to overwrite it): #{ex}")
+            end
+          end
+        else # new project
+          log.action(InstallProjectAction.new(@platform, project))
         end
-        _compare_versions project, platform_project
-      else # new project
-        log.action(InstallProjectAction.new(@platform, project))
       end
-
       return (not has_makefile)
     end
 
@@ -378,19 +398,37 @@ module Drupid
           log.notice "#{makefile_project.extended_name}#{p} will be patched"
           log.notice(diff.join("\n"))
         else
-          log.error("#{platform_project.extended_name}#{p}: mismatch with cached copy:\n" + diff.join("\n"))
           log.action(update_action)
+          if @force_changes
+            owarn "Mismatch with cached copy: overwriting local copy."
+          else
+            log.error("#{platform_project.extended_name}#{p}: mismatch with cached copy:\n" + diff.join("\n"))
+          end
         end
       when 1 # upgrade
         log.action(update_action)
       when -1 # downgrade
         log.action(UpdateProjectAction.new(platform, makefile_project, :downgrade => true))
-        if platform_project.drupal?
+        if which('drush').nil?
+          if @force_changes
+            owarn "Forcing downgrade."
+          else
+            log.error("#{platform_project.extended_name}: use --force to downgrade or install Drush >=6.0.")
+          end
+        elsif platform_project.drupal?
           if @platform.bootstrapped?
-            log.error("#{platform_project.extended_name} cannot be downgraded because it is bootstrapped (use --force to override)")
+            if @force_changes
+              owarn "Downgrading a bootstrapped Drupal platform."
+            else
+              log.error("#{platform_project.extended_name} cannot be downgraded because it is bootstrapped (use --force to override)")
+            end
           end
         elsif platform_project.installed?(site)
-          log.error("#{platform_project.extended_name}#{p} must be uninstalled before downgrading (use --force to override)")
+          if @force_changes
+            owarn "Downgrading an installed/enabled project."
+          else
+            log.error("#{platform_project.extended_name}#{p} must be uninstalled before downgrading (use --force to override)")
+          end
         end
       when nil # One or both projects have no version
         # Check whether the content of the projects is consistent
@@ -405,7 +443,11 @@ module Drupid
           log.action(update_action)
           log.notice(diff.join("\n"))
           if platform_project.has_version? and (not makefile_project.has_version?)
-            log.error("Cannot upgrade #{makefile_project.name} from known version to unknown version")
+            if @force_changes
+              owarn "Upgrading #{makefile_project.name} to unknown version."
+            else
+              log.error("Cannot upgrade #{makefile_project.name} from known version to unknown version")
+            end
           end
         end
       end

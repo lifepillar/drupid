@@ -46,7 +46,7 @@ module Drupid
 
     def preflight_dependencies
       odie 'Drupid requires Ruby 1.8.7 or later' if RUBY_VERSION < '1.8.7'
-      ['diff','curl','git','drush','mktemp','patch','rsync'].each do |cmd|
+      ['diff','curl','git','mktemp','patch','rsync'].each do |cmd|
         if `which #{cmd} 2>/dev/null`.chomp.empty?
           odie "Drupid requires '#{cmd}', but '#{cmd}' was not found in your PATH."
         end
@@ -81,7 +81,7 @@ module Drupid
           o.on('-D', '--debug', 'Enable debugging.') { $DEBUG = true; $VERBOSE = true }
           o.on('-e', '--edit [URL]', 'Create patches interactively.',
             'With no URL, edit the current directory.') { |u| @options[:command] = :edit; @options[:edit] = u }
-          o.on('-f', '--force', 'Force completion, even if there are errors.') { |b| @options[:force] = b }
+          o.on('-f', '--force', 'Force completion, even if there are warnings or errors.') { |b| @options[:force] = b }
           o.on('-g', '--graph', 'Generate a dependency graph and exit.') { @options[:command] = :graph }
           o.on('-h', '--help', 'Print help and exit.') {
             puts o
@@ -132,7 +132,7 @@ module Drupid
       rescue => ex
         odie "Could not analyze platform: #{ex}"
       end
-      @updater = Drupid::Updater.new(mf, pl, @options[:site])
+      @updater = Drupid::Updater.new(mf, pl, @options)
       blah 'Syncing (this may take a while)...'
       ohai 'Preflighting changes...'
       @updater.sync(
