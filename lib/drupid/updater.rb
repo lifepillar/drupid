@@ -531,7 +531,7 @@ module Drupid
       end
 
       def msg
-        label = @downgrade ? 'Demote' : 'Update'
+        label = 'Update'
         if old_project = platform.get_project(component.name)
           "#{Tty.blue}[#{label}]#{Tty.white}  #{component.name}: #{old_project.version.long} => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
         else
