@@ -26,14 +26,12 @@ module Drupid
   # A wrapper around drush.
   module Drush extend Drupid::Utils
 
-    DRUSH = `which drush`.strip
-
     # Returns true if a Drupal's site is bootstrapped at the given path;
     # returns false otherwise.
     def self.bootstrapped?(path, options = {})
       output = ''
       FileUtils.cd(path) do
-        output = %x|#{DRUSH} core-status --format=yaml|
+        output = %x|drush core-status --format=yaml|
       end
       st = YAML.load(output)
       return false unless st
@@ -54,7 +52,7 @@ module Drupid
       FileUtils.cd(site_path) do
         # Redirect stderr to stdout because we do not want to output
         # Drush's error messages when Drupid is run in verbose mode.
-        output = %x|#{DRUSH} pm-info --format=yaml #{project_name} 2>&1|
+        output = %x|drush pm-info --format=yaml #{project_name} 2>&1|
         return false unless $?.success? # site not fully bootstrapped
       end
       st = YAML.load(output)
