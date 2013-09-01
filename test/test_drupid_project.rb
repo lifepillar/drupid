@@ -510,6 +510,8 @@ class TestDrupidProject < MiniTest::Unit::TestCase
     assert_instance_of Drupid::Version, p.version
     assert_equal '6.28', p.version.short
     assert_equal 6, p.version.core.to_i
+    assert_nil p.download_url
+    p.update_download_url
     assert_equal 'http://ftp.drupal.org/files/projects/drupal-6.28.tar.gz', p.download_url
   end
 
@@ -520,6 +522,8 @@ class TestDrupidProject < MiniTest::Unit::TestCase
     assert_instance_of Drupid::Version, p.version
     assert_equal '6.x-2.9', p.version.long
     assert_equal 6, p.version.core.to_i
+    assert_nil p.download_url
+    p.update_download_url
     assert_equal 'http://ftp.drupal.org/files/projects/cck-6.x-2.9.tar.gz', p.download_url
   end
 
