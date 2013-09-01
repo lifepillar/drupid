@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.email       = 'lifepillar@lifepillar.com'
   s.files       = FileList['lib/**/*.rb', 'bin/drupid'].to_a
   s.executables << 'drupid'
+  s.add_runtime_dependency "nokogiri", [">= 1.5.9"]
   s.add_runtime_dependency "rgl", [">= 0.4.0"]
   s.homepage    = 'http://lifepillar.com'
   s.license     = 'MIT'
