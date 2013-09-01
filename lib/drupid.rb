@@ -19,8 +19,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 require 'fileutils'
+require 'drupid/version'
 require 'drupid/extend/pathname'
 
 # To silence (most) warnings from a required file
@@ -37,16 +37,11 @@ module Kernel
   end
 end unless Kernel.respond_to? :silence_warnings
 
-module Drupid
-  DRUPID_VERSION = '1.1.1'
-  DRUPID_USER_AGENT = "Drupid #{DRUPID_VERSION} (Ruby #{RUBY_VERSION}-#{RUBY_PATCHLEVEL}; #{RUBY_PLATFORM})"
-end
-
 require 'drupid/utils'
 require 'drupid/download_strategy'
 require 'drupid/drush'
 require 'drupid/patch'
-require 'drupid/version'
+require 'drupid/project_version'
 require 'drupid/component'
 require 'drupid/project'
 require 'drupid/library'
