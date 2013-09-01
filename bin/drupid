@@ -255,6 +255,7 @@ module Drupid
     def go!
       preflight_dependencies
       parse_options
+      debug USER_AGENT
       ohai "Dry run" if @options[:dry]
       case @options[:command]
       when :clear then clear_cache

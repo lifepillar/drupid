@@ -388,7 +388,8 @@ module Drupid
       begin
         component.fetch
       rescue => ex
-        @log.error("#{component.extended_name} could not be fetched: #{ex.message}")
+        @log.error("#{component.extended_name} could not be fetched.")
+        debug "_fetch_and_patch: #{ex.message}"
         return false
       end
       if component.has_patches?

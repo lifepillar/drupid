@@ -356,9 +356,9 @@ module Drupid
           @release_xml = Nokogiri::XML(open("http://updates.drupal.org/release-history/#{self.name}/#{self.core}"))
         end
         debug "Release history retrieved"
-      rescue Exception
+      rescue => ex
         owarn "Could not get release history for #{self.extended_name}"
-        blah e
+        debug "fetch_release_history: #{ex}"
         @release_xml = nil
       end
     end
@@ -499,7 +499,7 @@ module Drupid
           self.download_url = "http://git.drupal.org/project/#{name}.git"
         end
         self.update_download_url if self.download_url.nil?
-        raise "No download URL specified for #{self.extended_name}" unless self.download_url
+        raise "No download URL defined for #{self.extended_name}" unless self.download_url
         downloader = Drupid.makeDownloader  self.download_url.to_s,
                                             self.cached_location.dirname.to_s,
                                             self.cached_location.basename.to_s,

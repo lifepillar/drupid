@@ -42,8 +42,9 @@ module Drupid
       blah "Fetching patch..."
       begin
         curl @url.to_s, '-o', dst
-      rescue
+      rescue => ex
         raise "Patch #{File.basename(@url.to_s)} could not be fetched."
+        debug ex.message
       end
       @cached_location = dst
       debug "Patch downloaded into #{@cached_location}"
