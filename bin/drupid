@@ -98,7 +98,7 @@ module Drupid
           '(For multi-site platforms.)') { |s| @options[:site] = s }
           o.on('-u', '--updatedb', "Update Drupal's database after a successful sync.") { @options[:updatedb] = true }
           o.on('-v', '--verbose', 'Be verbose.') { $VERBOSE = true }
-          o.on('-V', '--version', 'Print version and exit.') { puts DRUPID_USER_AGENT; exit 0 }
+          o.on('-V', '--version', 'Print version and exit.') { puts USER_AGENT; exit 0 }
           o.parse!
         end
       rescue OptionParser::InvalidOption, OptionParser::AmbiguousOption => ex
