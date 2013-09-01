@@ -41,7 +41,7 @@ To run the whole test suite:
 
 To run a single test file:
 
-    ruby -Itest -Ilib test/test_<name>.rb
+    bundle exec ruby -Itest -Ilib test/test_<name>.rb
 
 or
 
