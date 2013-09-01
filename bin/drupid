@@ -86,7 +86,6 @@ module Drupid
           o.on('-g', '--graph', 'Generate a dependency graph and exit.') { @options[:command] = :graph }
           o.on('-h', '--help', 'Print help and exit.') {
             puts o
-            puts "\nGleefully brought to you by Lifepillar! http://lifepillar.com"
             exit 0
           }
           o.on('-l', '--no-libs', 'Do not synchronize libraries.') { @options[:nolibs] = true }
