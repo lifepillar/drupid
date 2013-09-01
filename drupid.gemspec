@@ -19,8 +19,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
   gem.has_rdoc      = true
-  gem.rdoc_options << '--title' << 'Drupid' << '--main' << 'README.rdoc' <<
-                      'line-numbers'
+  gem.rdoc_options << '--title' << 'Drupid' << '--line-numbers'
 
   # Dependencies
   gem.add_runtime_dependency 'rgl', ['>= 0.4.0']
