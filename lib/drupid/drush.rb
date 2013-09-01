@@ -33,7 +33,11 @@ module Drupid
       FileUtils.cd(path) do
         output = %x|drush core-status --format=yaml|
       end
-      st = YAML.load(output)
+      begin # See self.installed?
+        st = YAML.load(output)
+      rescue Exception
+        return false
+      end
       return false unless st
       return (st['bootstrap'] =~ /Successful/) ? true : false
     end
@@ -55,7 +59,13 @@ module Drupid
         output = %x|drush pm-info --format=yaml #{project_name} 2>&1|
         return false unless $?.success? # site not fully bootstrapped
       end
-      st = YAML.load(output)
+      # If a project is not found, Drush does *not* return a YAML structure,
+      # so we need to catch exceptions here.
+      begin
+        st = YAML.load(output)
+      rescue Exception
+        return false
+      end
       return false unless st.has_key?(project_name)
       type = st[project_name]['type']
       status = st[project_name]['status']
