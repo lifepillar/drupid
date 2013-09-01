@@ -14,8 +14,8 @@ end
 begin
 RDoc::Task.new(:rdoc => "doc", :clobber_rdoc => "doc:clean", :rerdoc => "doc:force") do |rd|
   rd.rdoc_dir = 'doc'
-  rd.main = 'README.rdoc'
-  rd.rdoc_files.include('README.rdoc', 'lib/drupid.rb')
+  rd.main = 'README.md'
+  rd.rdoc_files.include('README.md')
   rd.rdoc_files.include('lib/**/*.rb')
   rd.title = 'Drupid'
 end
