@@ -46,7 +46,6 @@ module Drupid
     end
 
     def preflight_dependencies
-      odie 'Drupid requires Ruby 1.8.7 or later' if RUBY_VERSION < '1.8.7'
       ['diff','curl','git','mktemp','patch','rsync'].each do |cmd|
         if `which #{cmd} 2>/dev/null`.chomp.empty?
           odie "Drupid requires '#{cmd}', but '#{cmd}' was not found in your PATH."

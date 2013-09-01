@@ -5,6 +5,7 @@ require 'drupid/version'
 
 Gem::Specification.new do |gem|
   gem.name          = 'drupid'
+  gem.required_ruby_version = '>= 1.8.7'
   gem.version       = Drupid::VERSION
   gem.license     = 'MIT'
   gem.authors       = ['Lifepillar']
