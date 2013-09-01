@@ -153,7 +153,7 @@ module Drupid
 
     def curl *args
       curl = Pathname.new(which 'curl')
-      args = ['-qf#LA', DRUPID_USER_AGENT, *args]
+      args = ['-qf#LA', USER_AGENT, *args]
       args << "--insecure" #if MacOS.version < 10.6
       args << "--silent" unless $VERBOSE
 
