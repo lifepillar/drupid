@@ -30,10 +30,10 @@ module Drupid
     # or nil if this platform does not contain Drupal core.
     attr :drupal_project
     # The path for contrib modules and themes (e.g., 'sites/all'),
-    # relative to #path.
+    # relative to #local_path.
     attr_accessor :contrib_path
     # The path to the sites directory (default: 'sites'), relative
-    # relative to #path.
+    # relative to #local_path.
     attr :sites_dir
 
     # Creates a new platform object for the Drupal installation at the
