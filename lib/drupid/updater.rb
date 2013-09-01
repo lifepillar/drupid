@@ -357,6 +357,29 @@ module Drupid
       @derivative_builds.clear
     end
 
+    # Updates Drupal's database using <tt>drush updatedb</tt>.
+    # If #site is defined, then updates only the specified site; otherwise,
+    # iterates over all Platform#site_names and updates each one in turn.
+    #
+    # Returns true upon success, false otherwise.
+    def updatedb
+      ohai "Updating Drupal database..."
+      blah "Platform: #{self.platform.local_path}"
+      res = true
+      site_list = (self.site) ? [self.site] : self.platform.site_names
+      site_list.each do |s|
+        site_path = self.platform.sites_path + s
+        debug "Site path: #{site_path}"
+        unless site_path.exist?
+          debug "Skipping #{site_path} because it does not exist."
+          next
+        end
+        blah "Updating site: #{s}"
+        res = Drush.updatedb(site_path) && res
+      end
+      return res
+    end
+
   private
 
     # Returns true if the given component is successfully cached and patched;

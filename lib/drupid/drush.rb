@@ -64,10 +64,11 @@ module Drupid
     end
 
     # Runs drush updatedb at the specified path.
-    # Returns true upon success, false upon failure.
+    #
+    # Raises a Drupid:ErrorDuringExecution exception if an error occurs.
     def self.updatedb site_path
       FileUtils.cd(site_path) do
-        system('drush updatedb -y')
+        return system 'drush updatedb -y'
       end
     end
 

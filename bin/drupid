@@ -39,7 +39,8 @@ module Drupid
         :nodeps    => false,
         :nolibs    => false,
         :out       => nil,
-        :site      => nil
+        :site      => nil,
+        :updatedb  => false
       }
       @updater = nil  
     end
@@ -61,7 +62,7 @@ module Drupid
           o.banner = "Drupid synchronizes a Drush makefile" +
             " with a Drupal platform, and more!\n" +
             "Usage:\n" +
-            "drupid -s <MAKEFILE> -p <DIRECTORY> [-cdDflnSv]\n" +
+            "drupid -s <MAKEFILE> -p <DIRECTORY> [-cdDflnSuv]\n" +
             "drupid --clear-cache [-nv]\n" +
             "drupid --edit [<URL>] [-v] [-o <FILE>]\n" +
             "drupid --graph -p <DIRECTORY> [-Sv]\n" +
@@ -97,6 +98,7 @@ module Drupid
           end
           o.on('-S', '--site NAME', 'Process the given site.',
           '(For multi-site platforms.)') { |s| @options[:site] = s }
+          o.on('-u', '--updatedb', "Update Drupal's database after a successful sync.") { @options[:updatedb] = true }
           o.on('-v', '--verbose', 'Be verbose.') { $VERBOSE = true }
           o.on('-V', '--version', 'Print version and exit.') { puts DRUPID_USER_AGENT; exit 0 }
           o.parse!
@@ -165,6 +167,16 @@ module Drupid
       (!(failed) or @options[:force]) and
       '.lock' != @updater.makefile.path.extname
         @updater.makefile.save(@updater.makefile.path.sub_ext('.make.lock'))
+      end
+      if (not failed) and @options[:updatedb]
+        if which('drush').nil?
+          owarn 'Not updating the database because Drush cannot be found.'
+        elsif @updater.updatedb
+          ohai "Success!"
+        else
+          ofail "Database update failed."
+          failed = true
+        end
       end
       if failed
         exit 1
