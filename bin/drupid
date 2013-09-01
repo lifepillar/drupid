@@ -166,7 +166,7 @@ module Drupid
       '.lock' != @updater.makefile.path.extname
         @updater.makefile.save(@updater.makefile.path.sub_ext('.make.lock'))
       end
-      if (not failed) and @options[:updatedb]
+      if (not failed) and (not @options[:dry]) and @options[:updatedb]
         if which('drush').nil?
           owarn 'Not updating the database because Drush cannot be found.'
         elsif @updater.updatedb
