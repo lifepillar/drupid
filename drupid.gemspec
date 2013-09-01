@@ -24,8 +24,7 @@ Gem::Specification.new do |gem|
 
   # Dependencies
   gem.add_runtime_dependency 'rgl', ['>= 0.4.0']
-  nokogiri_version = (RUBY_VERSION < '1.9') ? '= 1.5.9' : '>= 1.6.0'
-  gem.add_runtime_dependency 'nokogiri', [nokogiri_version]
+  gem.add_runtime_dependency 'nokogiri', ['= 1.5.9']
   gem.add_development_dependency 'minitest', ['>= 5.0.6']
   gem.add_development_dependency 'rdoc', ['>= 0']
 end
