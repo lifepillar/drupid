@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidPlatformProject < MiniTest::Unit::TestCase
+class TestDrupidPlatformProject < Minitest::Test
 
   def setup
     @platform = Drupid::Platform.new(TESTSITE)

@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidUpdater < MiniTest::Unit::TestCase
+class TestDrupidUpdater < Minitest::Test
 
   def setup
     @mf = Drupid::Makefile.new(FIXTURES+'drupal-example.make')
@@ -59,7 +59,7 @@ class TestDrupidUpdater < MiniTest::Unit::TestCase
 end # TestDrupidUpdater
 
 
-class TestDrupidUpdaterLog < MiniTest::Unit::TestCase
+class TestDrupidUpdaterLog < Minitest::Test
 
   def test_create_updater_log
     log = Drupid::Updater::Log.new

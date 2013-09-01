@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidLibrary < MiniTest::Unit::TestCase
+class TestDrupidLibrary < Minitest::Test
 
   def test_create_library
     ml = Drupid::Library.new 'MyLibrary'

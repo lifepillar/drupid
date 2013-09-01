@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidProjectInfo < MiniTest::Unit::TestCase
+class TestDrupidProjectInfo < Minitest::Test
 
   def test_module_info_from_info_file
     module_path = TESTSITE+'sites/all/modules/views'
@@ -223,7 +223,7 @@ class TestDrupidProjectInfo < MiniTest::Unit::TestCase
 end # TestDrupidProjectInfo
 
 
-class TestDrupidProject < MiniTest::Unit::TestCase
+class TestDrupidProject < Minitest::Test
 
   def test_project_creation
     p = Drupid::Project.new('bar', 7)
@@ -529,7 +529,7 @@ class TestDrupidProject < MiniTest::Unit::TestCase
 
 end # TestDrupidProject
 
-class TestDrupidProjectFetchAndPatch < MiniTest::Unit::TestCase
+class TestDrupidProjectFetchAndPatch < Minitest::Test
 
   def setup
     @cache = FIXTURES+'temp-cache'
@@ -595,7 +595,7 @@ class TestDrupidProjectFetchAndPatch < MiniTest::Unit::TestCase
 end # TestDrupidProjectFetchAndPatch
 
 # 
-# class TestDrupidProjectCopyMoveDelete < MiniTest::Unit::TestCase
+# class TestDrupidProjectCopyMoveDelete < Minitest::Test
 # 
 #   def setup
 #     @temp = File.expand_path(File.join(File.dirname(__FILE__), 'fixtures', 'temp'))

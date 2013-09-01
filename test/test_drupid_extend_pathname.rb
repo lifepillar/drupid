@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidExtendPathname < MiniTest::Unit::TestCase
+class TestDrupidExtendPathname < Minitest::Test
 
   def test_compression_type
     path = FIXTURES + 'fake_library.tar.gz'

@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidDrush < MiniTest::Unit::TestCase
+class TestDrupidDrush < Minitest::Test
 
   def test_bootstrapped
     res = Drupid::Drush.bootstrapped?(TESTSITE.to_s)

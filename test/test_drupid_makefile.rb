@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidMakefile < MiniTest::Unit::TestCase
+class TestDrupidMakefile < Minitest::Test
 
   def setup
     @makefile = Drupid::Makefile.new(FIXTURES+'drupal-example.make')

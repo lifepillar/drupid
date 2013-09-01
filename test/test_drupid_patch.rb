@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidPatch < MiniTest::Unit::TestCase
+class TestDrupidPatch < Minitest::Test
 
   def setup
     @temp_dir = FIXTURES + 'templib'

@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidVersion < MiniTest::Unit::TestCase
+class TestDrupidVersion < Minitest::Test
 
   def test_version_object_creation
     v = Drupid::Version.new(7, '1.0-rc4')

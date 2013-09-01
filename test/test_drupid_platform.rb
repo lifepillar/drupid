@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidPlatform < MiniTest::Unit::TestCase
+class TestDrupidPlatform < Minitest::Test
 
 
   def setup

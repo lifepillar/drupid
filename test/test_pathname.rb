@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestPathname < MiniTest::Unit::TestCase
+class TestPathname < Minitest::Test
 
   def setup
     @temp_dir = FIXTURES + 'templib'

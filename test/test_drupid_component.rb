@@ -22,7 +22,7 @@
 
 require 'helper'
 
-class TestDrupidCache < MiniTest::Unit::TestCase
+class TestDrupidCache < Minitest::Test
 
   def setup
     @cache = FIXTURES+'temp-cache'
@@ -43,7 +43,7 @@ class TestDrupidCache < MiniTest::Unit::TestCase
 end # TestDrupidCache
 
 
-class TestDrupidComponent < MiniTest::Unit::TestCase
+class TestDrupidComponent < Minitest::Test
 
   def test_create_component
     mc = Drupid::Component.new 'MyComponent'
@@ -92,7 +92,7 @@ class TestDrupidComponent < MiniTest::Unit::TestCase
 
 end # TestDrupidComponent
 
-class TestDrupidComponentFetchAndPatch < MiniTest::Unit::TestCase
+class TestDrupidComponentFetchAndPatch < Minitest::Test
 
   def setup
     @cache = FIXTURES+'temp-cache'
