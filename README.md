@@ -41,12 +41,12 @@ To run the whole test suite:
 
 To run a single test file:
 
-    bundle exec turn -Itest -Ilib test/test_<name>.rb
+    ruby -Itest -Ilib test/test_<name>.rb
 
 or
 
-    ruby -Itest -Ilib test/test_<NAME>.rb
+    bundle exec rake test TEST='test/test_<name>.rb'
 
 To run a single test:
 
-    bundle exec turn -Itest -Ilib test/test_NAME.rb --name '<test method name>'
+    ruby -Itest -Ilib test/test_NAME.rb --name '<test method name>'
