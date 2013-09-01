@@ -9,9 +9,12 @@ Drupid is a better replacement for [Drush](https://github.com/drush-ops/drush) `
 
 ### Release Notes ###
 
-#### Version 1.1.2 (2013/9/1) ####
+#### Version 1.1.3 (2013/9/1) ####
 
-Clean up the gem packaging process and fix a broken dependency in Ruby 1.8.
+- Fixed a broken dependency causing Drupid to fail to install in Ruby 1.8.
+- Cleaned up the gem packaging process.
+- Better debugging messages.
+- Bug fixes.
 
 #### Version 1.1.0 (2013/9/1) ####
 
