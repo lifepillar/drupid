@@ -1,29 +1,28 @@
-GEM
-  remote: http://rubygems.org/
+PATH
+  remote: .
   specs:
-    ansi (1.4.3)
+    drupid (1.1.1)
+      nokogiri (= 1.5.9)
+      rgl (>= 0.4.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
     json (1.8.0)
-    mini_portile (0.5.1)
-    minitest (4.7.5)
-    nokogiri (1.6.0)
-      mini_portile (~> 0.5.0)
-    rack (1.5.2)
-    rack-test (0.6.2)
-      rack (>= 1.0)
+    minitest (5.0.6)
+    nokogiri (1.5.9)
     rake (10.1.0)
     rdoc (4.0.1)
       json (~> 1.4)
-    turn (0.9.6)
-      ansi
+    rgl (0.4.0)
+      rake
+      stream (>= 0.5)
+    stream (0.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  ansi
-  minitest (~> 4.7)
-  nokogiri
-  rack-test
-  rake
+  drupid!
+  minitest (>= 5.0.6)
   rdoc
-  turn

@@ -1,4 +1,5 @@
 .DS_Store
+Gemfile.lock
 drupid-*.gem
 /.bundle/*
 !/.bundle/config
