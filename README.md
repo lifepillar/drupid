@@ -7,9 +7,13 @@ Drupid is a better replacement for [Drush](https://github.com/drush-ops/drush) `
 [![Gem Version](https://badge.fury.io/rb/drupid.png)](http://badge.fury.io/rb/drupid)
 
 
-### Release Notes
+### Release Notes ###
 
-#### Version 1.1.0 (2013/9/1)
+#### Version 1.1.1 (2013/9/1) ####
+
+Clean up the gem packaging process and fix a broken dependency in Ruby 1.8.
+
+#### Version 1.1.0 (2013/9/1) ####
 
 - Drush is no more a required dependency. Drush is now used only for database-related operations, but Drupid will work even if Drush is not found. When Drush is not installed, downgrading a project always requires `--force`.
 - Added a `--updatedb` option to automatically update Drupal's database after a successful synchronization. If Drush is not installed, this option has no effect.
@@ -20,20 +24,20 @@ Drupid is a better replacement for [Drush](https://github.com/drush-ops/drush) `
 - Lots of other bug fixes.
 
 
-#### Version 1.0.2 (2013/8/26)
+#### Version 1.0.2 (2013/8/26) ####
 
 Tested compatibility with Ruby 2.0.
 
-#### Version 1.0.1 (2012/11/5)
+#### Version 1.0.1 (2012/11/5) ####
 
 Fixed a bug causing a “Can't convert Pathname to String” error in some Ruby variants (e.g., 1.9.1-p243).
 
-#### Version 1.0.0
+#### Version 1.0.0 ####
 
 First public release.
 
 
-### How To Run The Tests
+### How To Run The Tests ###
 
 To run the whole test suite:
 
