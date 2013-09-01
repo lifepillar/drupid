@@ -301,8 +301,11 @@ module Drupid
     def dont_debug
       saved_debug = $DEBUG
       $DEBUG = false
-      yield
-      $DEBUG = saved_debug
+      begin
+        yield
+      ensure
+        $DEBUG = saved_debug
+      end
     end
 
   end # Utils
