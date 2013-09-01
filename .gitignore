@@ -1,6 +1,6 @@
 .DS_Store
 Gemfile.lock
-drupid-*.gem
+/pkg/drupid-*.gem
 /.bundle/*
 !/.bundle/config
 /bin/*
