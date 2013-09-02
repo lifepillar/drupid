@@ -190,8 +190,13 @@ module Drupid
       @projects.values.select { |p| p.core_project? }.each { |p| yield p }
     end
 
-    # Creates a PNG image depicting the relationships
+    # Creates an SVG image depicting the relationships
     # among the projects in this platform.
+    #
+    # *Requires*: the <tt>dot</tt> program. Without <tt>dot</tt>,
+    # only a <tt>.dot</tt> file is created, but no SVG image.
+    #
+    # Returns the name of the created file.
     def dependency_graph
       silence_warnings do
         begin
@@ -200,10 +205,6 @@ module Drupid
         rescue LoadError
           odie "Please install the RGL gem with 'gem install rgl'"
         end
-      end
-      if `which dot 2>/dev/null`.chomp.empty?
-        owarn "The 'dot' program is required to get an SVG image."
-        owarn "Without it you will only get a .dot file."
       end
       analyze
       # We use this instead of a dag, because there may be circular dependencies...
@@ -223,7 +224,13 @@ module Drupid
           graph.add_edge(p.name, depname)
         end
       end
-      graph.write_to_graphic_file('svg')
+      outfile = graph.write_to_graphic_file('svg')
+      if which('dot').nil?
+        owarn "The 'dot' program is required to get an SVG image."
+        return outfile.sub('.svg','.dot')
+      else
+        return outfile
+      end
     end
 
   private
