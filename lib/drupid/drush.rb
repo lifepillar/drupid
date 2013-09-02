@@ -39,6 +39,7 @@ module Drupid
         return false
       end
       return false unless st
+      return false unless st.instance_of?(Hash)
       return (st['bootstrap'] =~ /Successful/) ? true : false
     end
 
@@ -66,6 +67,7 @@ module Drupid
       rescue Exception
         return false
       end
+      return false unless st.instance_of?(Hash)
       return false unless st.has_key?(project_name)
       type = st[project_name]['type']
       status = st[project_name]['status']
