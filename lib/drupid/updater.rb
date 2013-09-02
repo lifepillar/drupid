@@ -418,7 +418,7 @@ module Drupid
         if diff.empty?
           @log.notice("#{Tty.white}[OK]#{Tty.reset}  #{platform_project.extended_name}#{p}")
         elsif makefile_project.has_patches?
-          log.action(update_action)
+          log.action(UpdateProjectAction.new(platform, makefile_project, :label => 'Patched'))
           log.notice "#{makefile_project.extended_name}#{p} will be patched"
           log.notice(diff.join("\n"))
         else
@@ -432,7 +432,7 @@ module Drupid
       when 1 # upgrade
         log.action(update_action)
       when -1 # downgrade
-        log.action(UpdateProjectAction.new(platform, makefile_project, :downgrade => true))
+        log.action(UpdateProjectAction.new(platform, makefile_project, :label => 'Update'))
         if which('drush').nil?
           if @force_changes
             owarn "Forcing downgrade."
@@ -589,19 +589,18 @@ module Drupid
 
 
     class UpdateProjectAction < AbstractAction
-      def initialize p, proj, opts = { :downgrade => false }
+      def initialize p, proj, opts = { :label => 'Update' }
         raise "#{proj.extended_name} does not exist locally" unless proj.exist?
         raise "Unknown type for #{proj.extended_name}" unless proj.proj_type
-        @downgrade = opts[:downgrade]
+        @label = opts[:label]
         super(p, proj)
       end
 
       def msg
-        label = 'Update'
         if old_project = platform.get_project(component.name)
-          "#{Tty.blue}[#{label}]#{Tty.white}  #{component.name}: #{old_project.version.long} => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
+          "#{Tty.blue}[#{@label}]#{Tty.white}  #{component.name}: #{old_project.version.long} => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
         else
-          "#{Tty.blue}[#{label}]#{Tty.white}  #{component.name}: => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
+          "#{Tty.blue}[#{@label}]#{Tty.white}  #{component.name}: => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
         end
       end
 
