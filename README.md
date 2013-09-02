@@ -9,6 +9,12 @@ Drupid is a better replacement for [Drush](https://github.com/drush-ops/drush) `
 
 ### Release Notes ###
 
+### Version 1.1.5 (2013/9/3) ###
+
+- Fixed a regression that caused `--edit` to accept only URLs. Now it is possible to use project names again (e.g., `drupid -e drupal-8.x` now works).
+- Various optimizations for `drupid --edit`: in particular, Drupal projects are now cached and temporary folders are not unnecessarily cleaned up. This results in better performance, especially for patching big projects like Drupal itself.
+- Other bug fixes.
+
 #### Version 1.1.4 (2013/9/2) ####
 
 - Fixed a regression which, in some circumstances, caused an uncaught exception upon checking whether a project is installed.
