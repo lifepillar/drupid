@@ -62,9 +62,9 @@ module Drupid
             " with a Drupal platform, and more!\n" +
             "Usage:\n" +
             "drupid -s <MAKEFILE> -p <DIRECTORY> [-cdDflnSuv]\n" +
-            "drupid --clear-cache [-nv]\n" +
-            "drupid --edit [<URL>] [-v] [-o <FILE>]\n" +
-            "drupid --graph -p <DIRECTORY> [-Sv]\n" +
+            "drupid --clear-cache [-Dnv]\n" +
+            "drupid --edit [<URL>] [-Dv] [-o <FILE>]\n" +
+            "drupid --graph -p <DIRECTORY> [-DSv]\n" +
             "drupid --help\n" +
             "drupid --version"
           o.on('-s', '--spec MAKEFILE', 'Path to a drush .make file.') do |p|
