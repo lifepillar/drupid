@@ -251,7 +251,6 @@ module Drupid
     include Comparable
 
     attr          :core
-    attr_accessor :location
     # The type of this project, which is one among 'drupal', 'module', 'theme'
     # and 'profile', or nil if the type has not been determined or assigned.
     # Note that this does not coincide with the 'type' field in a Drush makefile,
