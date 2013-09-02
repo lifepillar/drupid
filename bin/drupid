@@ -205,7 +205,7 @@ module Drupid
             begin
               proj = Project.from_s(@options[:edit])
             rescue NotDrupalVersionError
-              odie "#{@options[:edit]} is not a valid project name."
+              odie "#{@options[:edit]} is not a valid project name (core version required)."
             end
             proj.update_version unless proj.has_version?
             proj.update_download_url
