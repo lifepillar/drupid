@@ -197,10 +197,24 @@ module Drupid
 
     def patch_interactive
       patch = ''
+      url = nil
       if @options[:edit]
         begin
           tmp = Pathname.new `mktemp -d /tmp/temp_item-XXXXXX`.strip
-          dl = Drupid.makeDownloader @options[:edit], tmp, File.basename(@options[:edit])
+          if @options[:edit] !~ /:\/\// # not a URL
+            begin
+              proj = Project.from_s(@options[:edit])
+            rescue NotDrupalVersionError
+              odie "#{@options[:edit]} is not a valid project name."
+            end
+            proj.update_version unless proj.has_version?
+            proj.update_download_url
+            url = proj.download_url.to_s
+          else
+            url = @options[:edit]
+          end
+          odie "No download URL defined for #{@options[:edit]}" if url.empty?
+          dl = Drupid.makeDownloader url, tmp, File.basename(url)
           ohai "Fetching #{@options[:edit]}"
           dl.fetch
           dl.stage
