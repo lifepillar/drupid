@@ -233,6 +233,63 @@ class TestDrupidProject < Minitest::Test
     refute p.has_version?
   end
 
+  def test_project_from_s_1
+    p = Drupid::Project.from_s 'drupal-8.x'
+    assert_instance_of Drupid::Project, p
+    assert_equal 'drupal', p.name
+    assert_equal 8, p.core.to_i
+    refute p.has_version?
+    assert_equal 'drupal', p.proj_type
+  end
+
+  def test_project_from_s_2
+    p = Drupid::Project.from_s 'drupal-7.23'
+    assert_instance_of Drupid::Project, p
+    assert_equal 'drupal', p.name
+    assert_equal 7, p.core.to_i
+    assert p.has_version?
+    assert_equal '7.23', p.version.short
+    assert_equal '7.x-7.23', p.version.long
+    assert_equal 'drupal', p.proj_type
+  end
+
+  def test_project_from_s_3
+    p = Drupid::Project.from_s 'drupal-7.24-dev'
+    assert_instance_of Drupid::Project, p
+    assert_equal 'drupal', p.name
+    assert_equal 7, p.core.to_i
+    assert p.has_version?
+    assert_equal '7.24-dev', p.version.short
+    assert_equal '7.x-7.24-dev', p.version.long
+    assert_equal 'drupal', p.proj_type
+  end
+
+  def test_project_from_s_4
+    p = Drupid::Project.from_s 'media-7.x'
+    assert_instance_of Drupid::Project, p
+    assert_equal 'media', p.name
+    assert_equal 7, p.core.to_i
+    refute p.has_version?
+    assert_nil p.proj_type
+  end
+
+  def test_project_from_s_5
+    p = Drupid::Project.from_s 'tao-7.x-3.0-beta4'
+    assert_instance_of Drupid::Project, p
+    assert_equal 'tao', p.name
+    assert_equal 7, p.core.to_i
+    assert p.has_version?
+    assert_equal '3.0-beta4', p.version.short
+    assert_equal '7.x-3.0-beta4', p.version.long
+    assert_nil p.proj_type
+  end
+
+  def test_project_from_wrong_string
+    assert_raises Drupid::NotDrupalVersionError do
+      Drupid::Project.from_s 'media-2.0-unstable7' # no core version
+    end
+  end
+
   def test_project_version
     p = Drupid::Project.new('foo', 8)
     p.version = '8.x-1.0'

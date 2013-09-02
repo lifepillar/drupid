@@ -277,6 +277,33 @@ module Drupid
       @release_xml = nil
     end
 
+    # Creates a new Project instance from the specified string.
+    # Note that the string must at least contain the core version of the project.
+    #
+    # Raises a Drupid::NotDrupalVersionError if the string cannot be parsed.
+    #
+    # Examples:
+    #  proj = Drupid::Project.from_s 'drupal-7.23'
+    #  proj = Drupid::Project.from_s 'drupal-8.x'
+    #  proj = Drupid::Project.from_s 'media-7.x'
+    #  proj = Drupid::Project.from_s 'tao-7.x-3.0-beta4'
+    def self.from_s p
+      matchdata = p.match(/^([^-\/]+)[-\/](\d+.*)$/)
+      raise NotDrupalVersionError if matchdata.nil?
+      name = matchdata[1]
+      vers = nil
+      if ('drupal' == name) and (matchdata[2] =~ /^(\d+)\.(\d+)/) # e.g., drupal-8.0-dev
+        core = $1.to_i
+        vers = matchdata[2]
+      else
+        matchversion = matchdata[2].match(/^(\d+)\.x-?(.*)/)
+        raise NotDrupalVersionError if matchversion.nil?
+        core = matchversion[1].to_i
+        vers = matchversion[2]
+      end
+      Project.new(name, core, vers)
+    end
+
     # Returns true if a version is specified for this project, false otherwise.
     def has_version?
       nil != @version
