@@ -597,10 +597,11 @@ module Drupid
       end
 
       def msg
+        spc = ' ' * [0, 8 - @label.length].max
         if old_project = platform.get_project(component.name)
-          "#{Tty.blue}[#{@label}]#{Tty.white}  #{component.name}: #{old_project.version.long} => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
+          "#{Tty.blue}[#{@label}]#{Tty.white}#{spc}#{component.name}: #{old_project.version.long} => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
         else
-          "#{Tty.blue}[#{@label}]#{Tty.white}  #{component.name}: => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
+          "#{Tty.blue}[#{@label}]#{Tty.white}#{spc}#{component.name}: => #{component.version.long}#{Tty.reset} (#{platform.dest_path(component)})"
         end
       end
 
