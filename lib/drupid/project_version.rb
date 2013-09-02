@@ -99,6 +99,7 @@ module Drupid
     RC          = 16
     EMPTY       = 32
 
+    # Initializes a Version object from a core number and a short version.
     def initialize(core_num, v)
       raise 'Drupal version is not a string.' unless v.is_a?(String)
       @core = Drupid::VersionCore.new(core_num)
