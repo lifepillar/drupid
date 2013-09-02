@@ -18,7 +18,7 @@ Drupid is a better replacement for [Drush](https://github.com/drush-ops/drush) `
 #### Version 1.1.4 (2013/9/2) ####
 
 - Fixed a regression which, in some circumstances, caused an uncaught exception upon checking whether a project is installed.
-- If a local project differs from the cached version, and it must be patched, Drupid shows a [Patched] label instead of the more generic [update].
+- If a local project differs from the cached version, and it must be patched, Drupid shows a [Patched] label instead of the more generic [Update].
 
 #### Version 1.1.3 (2013/9/1) ####
 
