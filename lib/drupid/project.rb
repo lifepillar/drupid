@@ -382,9 +382,14 @@ module Drupid
         dont_debug do
           @release_xml = Nokogiri::XML(open("http://updates.drupal.org/release-history/#{self.name}/#{self.core}"))
         end
-        debug "Release history retrieved"
+        if @release_xml.at_xpath('/error')
+          debug "No release history for the given project"
+          @relese_xml = nil
+        else
+          debug "Release history retrieved"
+        end
       rescue => ex
-        owarn "Could not get release history for #{self.extended_name}"
+        owarn "Could not fetch release history for #{self.extended_name}"
         debug "fetch_release_history: #{ex}"
         @release_xml = nil
       end
