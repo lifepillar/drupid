@@ -271,7 +271,7 @@ module Drupid
       super(name)
       @core = VersionCore.new(core_num)
       @core_project = ('drupal' == @name) ? true : nil
-      @version = vers ? Version.from_s(@core.to_s + '-' + vers) : nil
+      @version = (vers.nil? or vers.empty?) ? nil : Version.from_s(@core.to_s + '-' + vers)
       @proj_type = ('drupal' == @name) ? 'drupal' : nil
       @info_file = nil
       @release_xml = nil
