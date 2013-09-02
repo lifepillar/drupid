@@ -358,6 +358,7 @@ module Drupid
     #
     # Retrieves the release information for this project from http://updates.drupal.org.
     def update_download_url
+      return unless self.has_version?
       self.fetch_release_history if @release_xml.nil?
       return if @release_xml.nil?
       if @release_xml.at_xpath('/project/releases/release/files/file/variant').nil?
