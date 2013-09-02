@@ -217,7 +217,7 @@ module Drupid
           debug "Copying from #{proj.cached_location} to #{tmp}"
           dont_debug { wd = proj.cached_location.ditto tmp }
         else
-          dl = Drupid.makeDownloader @options[:edit], tmp, File.basename(url)
+          dl = Drupid.makeDownloader @options[:edit], tmp, File.basename(@options[:edit])
           ohai "Fetching #{@options[:edit]}"
           begin
             dl.fetch
