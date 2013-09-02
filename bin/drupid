@@ -217,6 +217,7 @@ module Drupid
           dl = Drupid.makeDownloader url, tmp, File.basename(url)
           ohai "Fetching #{@options[:edit]}"
           dl.fetch
+          ohai "Staging project"
           dl.stage
           wd = dl.staged_path
         rescue => ex
@@ -234,6 +235,7 @@ module Drupid
           end
         else
           begin
+            ohai "Creating Git repo"
             blah "Initializing temporary git repo inside #{wd}"
             git 'init'
             git 'add', '-A'
@@ -248,6 +250,7 @@ module Drupid
           git 'add', '-A'
           patch = git 'diff', '--binary', 'HEAD'
         ensure
+          ohai "Cleaning up"
           git 'reset', '--hard'
           FileUtils.rmtree '.git' unless git_repo
         end
