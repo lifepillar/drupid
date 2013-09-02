@@ -210,6 +210,9 @@ class TestDrupidVersion < Minitest::Test
     assert_raises Drupid::NotDrupalVersionError do
       Drupid::Version.from_s '1.0' # missing core number (e.g., '7.x-1.0')
     end
+    assert_raises Drupid::NotDrupalVersionError do
+      Drupid::Version.from_s '7.x'
+    end
     assert_raises RuntimeError do
       Drupid::Version.new(7, 1.0)
     end
