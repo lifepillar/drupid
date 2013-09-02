@@ -9,7 +9,7 @@ Drupid is a better replacement for [Drush](https://github.com/drush-ops/drush) `
 
 ### Release Notes ###
 
-### Version 1.1.5 (2013/9/3) ###
+#### Version 1.1.5 (2013/9/3) ####
 
 - Fixed a regression that caused `--edit` to accept only URLs. Now it is possible to use project names again (e.g., `drupid -e drupal-8.x` now works).
 - Various optimizations for `drupid --edit`: in particular, Drupal projects are now cached and temporary folders are not unnecessarily cleaned up. This results in better performance, especially for patching big projects like Drupal itself.
@@ -67,4 +67,4 @@ or
 
 To run a single test:
 
-    ruby -Itest -Ilib test/test_NAME.rb --name '<test method name>'
+    bundle exec ruby -Itest -Ilib test/test_NAME.rb --name '<test method name>'
