@@ -242,8 +242,8 @@ module Drupid
       f = self.local_path+bf
       next unless f.exist?
       f.open('r').each_line do |l|
-        if l =~ /define.*'VERSION'.*'(.+)'/
-          v = $1
+        if l =~ /(define|const).*VERSION.*'(.+)'/
+          v = $2
           debug "Drupal version detected: #{v}"
           core = v.match(/^(\d+)\./)[1].to_i
           @drupal_project = Drupid::Project.new('drupal', core, v)
