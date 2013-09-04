@@ -4,6 +4,7 @@ require 'zurb-foundation'
 set :markdown_engine, :kramdown
 set :md, :layout_engine => :erb
 
+ignore "blog/*"
 ignore "javascripts/foundation/*"
 
 ###
@@ -91,26 +92,26 @@ end
 
 # Middleman Blog
 # Time.zone = "UTC"
-activate :blog do |blog|
-  blog.prefix = "/blog"
-  blog.permalink = ":year/:month/:day/:title.html"
-  blog.sources = ":year-:month-:day-:title.html"
-  blog.taglink = "tags/:tag.html"
-  blog.layout = "article"
-  blog.summary_separator = /(READMORE)/
-  blog.summary_length = 250
-  blog.year_link = ":year.html"
-  blog.month_link = ":year/:month.html"
-  blog.day_link = ":year/:month/:day.html"
-  blog.default_extension = ".md"
+# activate :blog do |blog|
+#   blog.prefix = "/blog"
+#   blog.permalink = ":year/:month/:day/:title.html"
+#   blog.sources = ":year-:month-:day-:title.html"
+#   blog.taglink = "tags/:tag.html"
+#   blog.layout = "article"
+#   blog.summary_separator = /(READMORE)/
+#   blog.summary_length = 250
+#   blog.year_link = ":year.html"
+#   blog.month_link = ":year/:month.html"
+#   blog.day_link = ":year/:month/:day.html"
+#   blog.default_extension = ".md"
 
-  blog.tag_template = "/blog/tag.html"
-  blog.calendar_template = "/blog/calendar.html"
+#   blog.tag_template = "/blog/tag.html"
+#   blog.calendar_template = "/blog/calendar.html"
 
-  blog.paginate = true
-  blog.per_page = 5
-  blog.page_link = "page/:num"
-end
+#   blog.paginate = true
+#   blog.per_page = 5
+#   blog.page_link = "page/:num"
+# end
 
 page "/blog/feed.xml", :layout => false
 
