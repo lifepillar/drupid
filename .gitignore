@@ -1,5 +1,5 @@
 .DS_Store
-.rbenv-version
+.ruby-version
 Gemfile.lock
 /pkg/drupid-*.gem
 /.bundle/*
