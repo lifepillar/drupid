@@ -1,0 +1,34 @@
+<% wrap_layout :layout do %>
+
+  <!-- Nav Bar -->
+  <div class="row">
+    <div class="large-12 columns">
+      <div class="nav-bar right">
+        <ul class="button-group">
+          <li><a href="/" class="button"><%= data.site.name %></a></li>
+          <% data.main_menu.each do |item| %>
+          <li><a href="<%= item.link %>" class="button"><%= item.title %></a></li>
+          <% end %>
+        </ul>
+      </div>
+      <h1><%= data.blog.name %> <small><%= data.blog.slogan %></small></h1>
+      <a class="right" href="/blog/feed.xml"><i class="icon-rss"></i></a>
+      <hr>
+    </div>
+  </div>
+  <!-- End Nav -->
+
+  <!-- Main Blog Content -->
+  <div class="row">
+    <div class="large-9 columns" role="content">
+      <%= yield %>
+    </div>
+
+    <aside class="large-3 columns">
+      <%= partial '/blog/sidebar' %>
+    </aside>
+  </div><!-- .row -->
+
+  <%= partial '/partials/footer' %>
+
+<% end %>

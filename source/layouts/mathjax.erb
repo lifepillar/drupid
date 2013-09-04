@@ -1,0 +1,6 @@
+<% wrap_layout :layout do %>
+  <% content_for :head do %>
+    <%= partial '/partials/mathjax' %>
+  <% end %>
+  <%= yield %>
+<% end %>
