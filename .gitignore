@@ -1,11 +1,13 @@
 .DS_Store
 .ruby-version
-Gemfile.lock
+.sass-cache
 /pkg/drupid-*.gem
 /.bundle/*
 !/.bundle/config
 /bin/*
 !/bin/drupid
 /doc/
+/lib
+/public
 /test/makefiles/*
 !/test/makefiles/*.make
