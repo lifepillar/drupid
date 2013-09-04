@@ -1,0 +1,11 @@
+.DS_Store
+.ruby-version
+Gemfile.lock
+/pkg/drupid-*.gem
+/.bundle/*
+!/.bundle/config
+/bin/*
+!/bin/drupid
+/doc/
+/test/makefiles/*
+!/test/makefiles/*.make
