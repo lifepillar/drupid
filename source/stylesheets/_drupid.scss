@@ -1,0 +1,77 @@
+// Base colors
+$life-white: rgb(253,253,253); // #FDFDFD
+$life-black: rgb(17,17,17); // #111111
+$life-bg: rgb(246,246,246); // #F6F6F6
+$life-fg: rgb(86,86,86); // #565656
+$life-teal: rgb(0,147,197); // #0093C5
+$life-slate-gray: rgb(147,157,162); // #939DA2
+$life-orange: rgb(255,140,0); // #FF8C00
+$life-green: rgb(57,95,31); // #395F1F
+//$drupid-blue: rgb(49,98,134); // #306186
+$drupid-blue: rgb(112,140,214);
+
+// Media breaks
+$break-small: 320px;
+$break-medium: 480px;
+$break-large: 768px;
+$break-max: 1024px;
+
+// Compass variables
+$contrasted-dark-default: $life-fg;
+$contrasted-light-default: $life-bg;
+$contrasted-lightness-threshold: 50%;
+
+// $media must be one of 'standard', 'landscape-tablet', 'portrait-tablet',
+// 'landscape-smartphone', 'portrait-smartphone', 'large', 'small'
+@mixin respond-to($media) {
+  @if $media == large {
+    @media only screen and (min-width: $break-large + 1) { @content; }
+  }
+  @else if $media == small {
+    @media only screen and (max-width: $break-large) { @content; }  
+  }
+  @if $media == portrait-smartphone {
+    @media only screen and (max-width: $break-small) { @content; }
+  }
+  @else if $media == landscape-smartphone {
+    @media only screen and (min-width: $break-small + 1) and (max-width: $break-medium) { @content; }
+  }
+  @else if $media == portrait-tablet {
+    @media only screen and (min-width: $break-medium + 1) and (max-width: $break-large) { @content; }
+  }
+  @else if $media == landscape-tablet {
+    @media only screen and (min-width: $break-large + 1) and (max-width: $break-max) { @content; }
+  }
+  @else if $media == standard {
+    @media only screen and (min-width: $break-large + 1) { @content; }
+  }
+  @else {
+    @warn "Wrong media query specification: #{$media}";
+  }
+}
+
+@mixin life-column($large, $small: $large, $large-offset: 0, $small-offset: $large-offset) {
+  @include respond-to(large) {
+    @include grid-column($columns: $large, $offset: $large-offset);
+  }
+  @include respond-to(small) {
+    @include grid-column($columns: $small, $offset: $small-offset);  
+  }
+}
+
+/* --- */
+
+#drupid-head {
+  @include grid-row;
+  //@include panel;
+  & > h1 {
+    @include life-column($large: 6, $small: 12);
+    @include text-shadow(lighten($drupid-blue,5%) 0 0 3px);    
+    font-size: emCalc(100);
+    color: $drupid-blue !important;
+  }
+  & > p {
+    @include life-column($large: 6, $small: 12);
+    font-size: emCalc(23);
+  }
+}
