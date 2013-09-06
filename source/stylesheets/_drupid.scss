@@ -98,3 +98,22 @@ tt {
     size: $h5-font-size;
   }
 }
+
+#life-footer {
+  @include grid-row;
+  border-top: {
+    width: $hr-border-width;
+    style: $hr-border-style;
+    color: $hr-border-color;
+  }
+  margin-top: $hr-margin;
+  padding-top: $hr-margin;
+
+  & > div#life-copyright {
+    @include grid-column(6);
+  }
+
+  & > div#life-social-links {
+    @include grid-column(6);
+  }
+}

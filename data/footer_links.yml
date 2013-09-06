@@ -1,8 +1,4 @@
-- title: Link 1
-  link: \#
-- title: Link 2
-  link: \#
-- title: Link 3
-  link: \#
-- title: Link 4
-  link: \#
+- title: <i class="icon-github icon-2x"></i>
+  link: http://github.com/lifepillar/drupid
+- title: <i class="icon-twitter icon-2x"></i>
+  link: http://twitter.com/lifepillar
