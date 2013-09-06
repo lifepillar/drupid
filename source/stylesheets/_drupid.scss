@@ -69,9 +69,32 @@
     }
 
     & > p {
-      font-size: $h5-font-size;
+      font: {
+        size: $h5-font-size;
+        style: italic;
+      }
       margin-top: emCalc(20);
       text-align: center;
     }
+  }
+} // #life-header
+
+#life-overview {
+  @include grid-row;
+  & > div#life-description {
+    @include large-column(8);
+    @include small-column(12);
+  }
+
+  & > div#life-installation {
+    @include large-column(4);
+    @include small-column(12);
+  }
+} // #life-overview
+
+tt {
+  font: {
+    family: $keystroke-font;
+    size: $h5-font-size;
   }
 }
