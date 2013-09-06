@@ -10,7 +10,7 @@
                     $collapse: false,
                     $float: left)
 {
-  @media only screen and (max-width: $break-large) {
+  @media only screen and (max-width: $small-screen) {
     @include grid-column($columns, $last-column, $center, $offset, $push, $pull, $collapse, $float);
   }
 }
@@ -24,7 +24,7 @@
                     $collapse: false,
                     $float: left)
 {
-  @media only screen and (min-width: $break-large + 1) {
+  @media only screen and (min-width: $small-screen + 1) {
     @include grid-column($columns, $last-column, $center, $offset, $push, $pull, $collapse, $float);
   }
 }
