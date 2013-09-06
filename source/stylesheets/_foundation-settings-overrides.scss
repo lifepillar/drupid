@@ -1,7 +1,17 @@
 /* Zurb Foundation Overrides */
 /* Use this to override the settings in Zurb Foundation _settings.scss */
+@import "compass/css3"; // For font-face
 
-//@import url("https://fonts.googleapis.com/css?family=Lato:400,700,700italic,900,400italic,300");
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700,700italic,900,400italic,300");
+@include font-face("Bebas Neue", font-files("BebasNeue.ttf", "BebasNeue.svg", "BebasNeue.woff", "BebasNeue.eot"));
+$body-font-family: "Helvetica Neue", "Lato", sans-serif;
+$header-font-family: "Bebas Neue", "Helvetica Neue", "Lato", sans-serif;
 
-//$primary-color: rgb(0,0,0);
-//$body-font-family: "Lato", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+// Colors
+// $primary-color: #2ba6cb;
+// $secondary-color: #e9e9e9;
+// $alert-color: #c60f13;
+// $success-color: #5da423;
+$body-font-color: rgb(51,51,51);
+$header-font-color: rgb(149,175,246);

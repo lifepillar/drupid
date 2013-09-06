@@ -1,13 +1,8 @@
-// Global Foundation Settings
-@import "zurb-foundation/settings";
-// Comment out this import if you don't want to use normalize
-@import "zurb-foundation/normalize";
-// Override the settings in Zurb Foundation _settings.scss
-@import "foundation-settings-overrides";
-// Check zurb-foundation/_app.scss if you are customizing your import below
-@import "foundation";
-// Font Awesome
+@import "zurb-foundation/settings"; // Global Foundation Settings
+@import "zurb-foundation/normalize"; // Comment out if you don't want to use normalize
+@import "foundation-settings-overrides"; // Override the settings in Zurb Foundation _settings.scss
+@import "foundation"; // Check zurb-foundation/_app.scss if you are customizing your import
 @import "font-awesome/font-awesome";
-// Blog
 //@import "blog";
-@import "syntax_highlighting";
+//@import "syntax_highlighting";
+@import "drupid";
