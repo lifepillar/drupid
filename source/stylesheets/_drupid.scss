@@ -29,78 +29,105 @@
   }
 }
 
-/* Styles */
 
-#life-header {
+/* The Grid */
+
+// Rows
+article {
   @include grid-row;
-  & > header {
-    @include grid-column(12);
-    position: relative;
-    border-bottom: {
-      width: $hr-border-width;
-      style: $hr-border-style;
-      color: $hr-border-color;
-    }
-    margin-bottom: $hr-margin;
-
-    & > div#life-waterdrop {
-      position: relative;
-      top: emCalc(10);
-      z-index: 1;
-      width: emCalc(394.41351 / 4);
-      height: emCalc(554.93317 / 4);
-      margin:0 auto;
-      & > svg {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    & > h1 {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      width: 100%;
-      text-align: center;
-      @include text-shadow(lighten($header-font-color, 5%) 0 0 3px);
-      font-size: emCalc(95);
-      color: $header-font-color;
-    }
-
-    & > p {
-      font: {
-        size: $h5-font-size;
-        style: italic;
-      }
-      margin-top: emCalc(20);
-      text-align: center;
-    }
-  }
-} // #life-header
-
-#life-overview {
-  @include grid-row;
-  & > div#life-description {
-    @include large-column(8);
-    @include small-column(12);
-  }
-
-  & > div#life-installation {
-    @include large-column(4);
-    @include small-column(12);
-  }
-} // #life-overview
-
-tt, pre {
-  font: {
-    family: $keystroke-font;
-    size: $h5-font-size;
-  }
 }
 
-#life-footer {
-  @include grid-row;
+// Columns
+header, footer {
+  @include grid-column(12);
+}
+
+section#life-description {
+  @include large-column(7);
+  @include small-column(12);
+}
+section#life-installation {
+  @include large-column(4, $offset:1);
+  @include small-column(12);
+}
+section#life-sync,
+section#life-patch,
+section#life-graph {
+  @include grid-column(12);
+}
+
+section#life-issues {
+  @include large-column(6);
+  @include small-column(12);
+}
+
+section#life-resources {
+  @include large-column(6);
+  @include small-column(12);
+}
+
+aside#life-lock-files {
+  @include large-column(6);
+  @include small-column(12);
+//  @include panel;
+//  @include radius;
+  }
+
+aside#life-best-practices {
+  @include large-column(6);
+  @include small-column(12);
+//  @include panel;
+//  @include radius;
+}
+
+
+/* Styles */
+header {
+  position: relative;
+  border-bottom: {
+    width: $hr-border-width;
+    style: $hr-border-style;
+    color: $hr-border-color;
+  }
+  margin-bottom: $hr-margin;
+
+  & > div#life-waterdrop {
+    position: relative;
+    top: emCalc(10);
+    z-index: 1;
+    width: emCalc(394.41351 / 4);
+    height: emCalc(554.93317 / 4);
+    margin: 0 auto;
+    & > svg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.7;
+    }
+  }
+
+  & > h1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100%;
+    text-align: center;
+    @include text-shadow(lighten($header-font-color, 5%) 0 0 3px);
+    font-size: emCalc(95);
+    color: $header-font-color;
+  }
+
+  & > p {
+    font: {
+      size: $h5-font-size;
+      style: italic;
+    }
+    margin-top: emCalc(20);
+    text-align: center;
+  }
+} // header
+
+footer {
   border-top: {
     width: $hr-border-width;
     style: $hr-border-style;
@@ -109,20 +136,63 @@ tt, pre {
   margin-top: $hr-margin;
   padding-top: $hr-margin;
 
-  & > div#life-copyright {
-    @include grid-column(6);
+  #life-copyright {
+    display: inline;
+    float: left;
   }
 
-  & > div#life-social-links {
-    @include grid-column(6);
-    & > ul {
-      @include inline-list;
-      float: right;
+  #life-logo {
+    width: emCalc(141.40345 * 1.2);
+    height: emCalc(41.074077 * 1.2);
+    margin: 0 auto;
+    text-align: center;
+    & > svg {
+      width: 100%;
+      height: 100%;
     }
+  }
+
+  ul#life-social-links {
+    @include inline-list;
+    float: right;
+  }
+} // footer
+
+#life-installation > div {
+  @include panel;
+  @include radius;
+  h3 {
+    color: darken($primary-color, 5%);
   }
 }
 
-// Global
+#life-description form {
+  input[type=submit] {
+    @include button-base;
+    @include button-size($padding: $button-sml, $full-width: false);
+    @include button-style($bg: $primary-color, $radius: $button-radius);
+    font-weight: normal;
+color: #fff;
+  }
+}
+
+/* Global styles */
+
 li {
   list-style-type: none;
+}
+
+tt, pre {
+  font: {
+    family: $keystroke-font;
+  }
+  white-space: pre;
+  overflow: scroll;
+}
+
+pre {
+  margin-bottom: $paragraph-margin-bottom;
+  line-height:$paragraph-line-height;
+  background-color: $secondary-color;
+  padding-left: 1em;
 }
