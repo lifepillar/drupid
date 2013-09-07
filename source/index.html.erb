@@ -2,57 +2,48 @@
 title: Drupid
 ---
 
-<div id="life-header">
-  <header>
-    <div id="life-waterdrop"><%= partial 'partials/waterdrop' %></div>
-    <h1>Drupid</h1>
-    <p>Drush Makefile <i class="icon-refresh"></i> Drupal</p>
-  </header>
-</div>
+<article id="life-drupid">
 
-<div id="life-overview">
-  <div id="life-description">
-    <%= partial 'content/overview' %>
-  </div>
+  <%= partial '/partials/header' %>
 
-  <div id="life-installation">
-    <%= partial 'content/installation' %>
-  </div>
-</div><!-- #life-header -->
+  <section id="life-description">
+    <%= partial '/content/overview' %>
+  </section>
 
-<div id="life-details">
-  <div id="life-usage">
-    <%= partial 'content/usage' %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="large-12 columns">
-    <div class="row">
-
-      <!-- Thumbnails -->
-      <div class="large-3 small-6 columns">
-        <img src="<%= lorem.image('250x250', :text => 'Thumbnail') %>" alt="thumbnail">
-        <h6 class="panel">Description</h6>
-      </div>
-
-      <div class="large-3 small-6 columns">
-        <img src="<%= lorem.image('250x250', :text => 'Thumbnail') %>" alt="thumbnail">
-        <h6 class="panel">Description</h6>
-      </div>
-
-      <div class="large-3 small-6 columns">
-        <img src="<%= lorem.image('250x250', :text => 'Thumbnail') %>" alt="thumbnail">
-        <h6 class="panel">Description</h6>
-      </div>
-
-      <div class="large-3 small-6 columns">
-        <img src="<%= lorem.image('250x250', :text => 'Thumbnail') %>" alt="thumbnail">
-        <h6 class="panel">Description</h6>
-      </div>
-      <!-- End Thumbnails -->
+  <section id="life-installation">
+    <div>
+    <%= partial '/content/installation' %>
     </div>
-  </div>
-</div>
+  </section>
 
-<%= partial '/partials/footer' %>
+  <section id="life-sync">
+    <%= partial '/content/sync' %>
+  </section>
+
+  <aside id="life-lock-files">
+    <%= partial '/content/lock-files' %>
+  </aside>
+
+  <aside id="life-best-practices">
+    <%= partial '/content/best-practices' %>
+  </aside>
+
+  <section id="life-patch">
+    <%= partial '/content/patches' %>
+  </section>
+
+  <section id="life-graph">
+    <%= partial '/content/graphs' %>
+  </section>
+
+  <section id="life-issues">
+    <%= partial '/content/issues' %>
+  </section>
+
+  <section id="life-resources">
+    <%= partial '/content/resources' %>
+  </section>
+
+  <%= partial '/partials/footer' %>
+
+</article>
