@@ -3,9 +3,9 @@
 @import "compass/css3"; // For font-face
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Lato:400,700,700italic,900,400italic,300");
+@import url("http://fonts.googleapis.com/css?family=Muli:400,400italic");
 @include font-face("Bebas Neue", font-files("BebasNeue.ttf", "BebasNeue.svg", "BebasNeue.woff", "BebasNeue.eot"));
-$body-font-family: "Helvetica Neue", "Lato", sans-serif;
+$body-font-family: "Muli", "Helvetica Neue", "Lato", sans-serif;
 $header-font-family: "Bebas Neue", "Helvetica Neue", "Lato", sans-serif;
 
 // Colors
