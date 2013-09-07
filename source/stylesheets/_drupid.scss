@@ -115,5 +115,9 @@ tt {
 
   & > div#life-social-links {
     @include grid-column(6);
+    & > ul {
+      @include inline-list;
+      float: right;
+    }
   }
 }
