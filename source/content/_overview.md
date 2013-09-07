@@ -14,3 +14,4 @@ Ah, and Drupid supports [installation profiles](http://drupal.org/node/306267) a
 
 Drupid is open-source free software distributed under the MIT license.
 
+<form action="https://www.paypal.com/cgi-bin/webscr" class="paypal" method="post"><input name="cmd" type="hidden" value="_s-xclick" /> <input name="hosted_button_id" type="hidden" value="JNT25DNHB25FS" /> <input type="submit" value="I want to donate!" /></form>
