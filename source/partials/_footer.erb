@@ -1,14 +1,15 @@
-<!-- Footer -->
+<footer>
+  <p id="life-copyright">&copy; Copyright 2012–2013 Lifepillar.</p>
 
-<footer id="life-footer">
-  <div id="life-copyright">
-    <p>&copy; Copyright 2012–2013 Lifepillar. I iron my shirts.</p>
+  <ul id="life-social-links">
+    <% data.footer_links.each do |item| %>
+      <li><a href="<%= item.link %>"><%= item.title %></a></li>
+    <% end %>
+  </ul>
+
+  <div id="life-logo">
+    <%= partial '/partials/lifepillar' %>
+    <p>I iron my shirts</p>
   </div>
-  <div id="life-social-links">
-    <ul>
-      <% data.footer_links.each do |item| %>
-        <li><a href="<%= item.link %>"><%= item.title %></a></li>
-      <% end %>
-    </ul>
-  </div>
+
 </footer>
