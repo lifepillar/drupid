@@ -6,6 +6,9 @@ set :md, :layout_engine => :erb
 
 ignore "blog/*"
 ignore "javascripts/foundation/*"
+ignore "javascripts/foundation.js.coffee"
+ignore "javascripts/vendor/jquery.js"
+ignore "javascripts/vendor/zepto.js"
 
 ###
 # Compass

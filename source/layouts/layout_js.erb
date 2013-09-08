@@ -1,0 +1,18 @@
+<% wrap_layout :layout do %>
+  <% content_for :end_body do %>
+    <script>
+      if ('__proto__' in {}) {
+        document.write('<%= js_escape_html(javascript_include_tag 'vendor/zepto.js') %>');
+      }
+      else {
+        document.write('<%= js_escape_html(javascript_include_tag 'vendor/jquery.js') %>');
+      }
+    </script>
+    <%= javascript_include_tag "foundation" %>
+    <script>
+      $(document).foundation();
+    </script>
+  <% end %>
+
+  <%= yield %>
+<% end %>
