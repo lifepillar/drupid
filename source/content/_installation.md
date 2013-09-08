@@ -1,16 +1,16 @@
 ### Installation
 
-<tt>gem install drupid</tt>
+`gem install drupid`
 
 ### Requirements
 
-<tt>curl</tt>, <tt>git</tt>, <tt>mktemp</tt>, <tt>patch</tt>, <tt>rsync</tt>
+`curl`, `git`, `mktemp`, `patch`, `rsync`
     
 …and, well, Ruby!
 
 ### Optional (recommended)
 
-<tt>dot</tt> (<tt>graphviz</tt>), <tt>drush</tt>
+`dot` (`graphviz`), `drush`
 
 ### Compatibility
 
