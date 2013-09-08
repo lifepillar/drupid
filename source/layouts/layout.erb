@@ -11,6 +11,9 @@
     <%= javascript_include_tag  "vendor/custom.modernizr" %>
     <%= favicon_tag 'favicon.png' %>
     <% if content_for?(:head) %><%= yield_content :head %><% end %>
+    <% unless :development == settings.environment %>
+      <%= partial '/partials/_analytics' %>
+    <% end %>
   </head>
 
   <body class="<%= page_classes %>">
